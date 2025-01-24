@@ -1,0 +1,69 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --bg-color: #29291f;
+  --main-color-text: #f3f1c4;
+  --addition-color-text: #fefaf1;
+  --addition-bg-color: #403f2b;
+}
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ul,
+ol,
+li {
+  list-style: none;
+}
+
+body {
+  font-size: 16px;
+  min-width: 320px;
+  min-height: 100vh;
+  height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--main-color-text);
+}
+
+.frauncesFontLight {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    'SOFT' 0,
+    'WONK' 0;
+}
+
+.main {
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.footer {
+  display: flex;
+  padding: 60px 8px;
+  width: 100%;
+  max-width: 1292px;
+}
