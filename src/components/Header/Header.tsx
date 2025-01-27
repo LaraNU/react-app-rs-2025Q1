@@ -3,7 +3,11 @@ import logo from '../../assets/logo.png';
 import { Component, ReactNode } from 'react';
 import Search from '../Search/Search';
 
-class Header extends Component {
+type Props = {
+  onSearch: (query: string) => void;
+};
+
+class Header extends Component<Props> {
   render(): ReactNode {
     return (
       <div className={styles.header}>
@@ -11,7 +15,7 @@ class Header extends Component {
           <img src={logo} alt="logo" />
           <span className={styles.logoText}>Monet Art Explorer</span>
         </div>
-        <Search />
+        <Search onSearch={this.props.onSearch} />
       </div>
     );
   }
