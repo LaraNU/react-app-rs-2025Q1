@@ -3,13 +3,25 @@ import { Component } from 'react';
 import Header from './components/Header/Header';
 import MainContent from './components/MainContent/MainContent';
 
-class App extends Component {
+type State = {
+  query: string;
+};
+
+class App extends Component<unknown, State> {
+  state: State = {
+    query: '',
+  };
+
+  handleSearch = (query: string) => {
+    this.setState({ query });
+  };
+
   render() {
     return (
       <>
-        <Header />
+        <Header onSearch={this.handleSearch} />
         <div className="frauncesFontLight">Monet Art Explorer</div>
-        <MainContent />
+        <MainContent query={this.state.query} />
       </>
     );
   }
