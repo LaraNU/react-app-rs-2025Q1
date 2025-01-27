@@ -1,11 +1,46 @@
 import styles from './Search.module.css';
 import { Component, ReactNode } from 'react';
+import { FormEvent } from 'react';
 
-class Search extends Component {
+type State = {
+  searchValue: string;
+};
+
+type Props = {
+  onSearch: (query: string) => void;
+};
+
+class Search extends Component<Props, State> {
+  state: State = {
+    searchValue: '',
+  };
+
+  componentDidMount(): void {
+    const queryFromStorage = localStorage.getItem('searchValue');
+    if (queryFromStorage) {
+      this.setState({ searchValue: queryFromStorage });
+    }
+  }
+
+  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedQuery = this.state.searchValue.trim();
+    localStorage.setItem('searchValue', trimmedQuery);
+    this.props.onSearch(trimmedQuery);
+  };
+
   render(): ReactNode {
     return (
-      <form className={styles.searchForm}>
-        <input className={styles.input} type="text" placeholder="Search" />
+      <form className={styles.searchForm} onSubmit={this.handleSubmit}>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="Search"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            this.setState({ searchValue: e.target.value })
+          }
+          value={this.state.searchValue}
+        />
         <button className={styles.searchBtn}>
           <img
             className={styles.searchIcon}
