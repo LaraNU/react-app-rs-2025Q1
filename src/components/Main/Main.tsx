@@ -10,7 +10,7 @@ class Main extends Component<Props> {
   render(): ReactNode {
     return (
       <main className={styles.main}>
-        <div className="frauncesFontLight">Monet Art Explorer</div>
+        <div className="pageTitle">Monet Art Explorer</div>
         <CardsList query={this.props.query} />
       </main>
     );

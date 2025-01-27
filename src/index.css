@@ -45,7 +45,7 @@ body {
   color: var(--main-color-text);
 }
 
-.frauncesFontLight {
+.pageTitle {
   font-family: 'Fraunces', serif;
   font-optical-sizing: auto;
   font-weight: 300;
@@ -55,6 +55,9 @@ body {
   font-variation-settings:
     'SOFT' 0,
     'WONK' 0;
+  text-align: center;
+  margin: 20px 0;
+  font-size: clamp(40px, 9vw, 135px);
 }
 
 .footer {
