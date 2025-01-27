@@ -59,10 +59,3 @@ body {
   margin: 20px 0;
   font-size: clamp(40px, 9vw, 135px);
 }
-
-.footer {
-  display: flex;
-  padding: 60px 8px;
-  width: 100%;
-  max-width: 1292px;
-}
