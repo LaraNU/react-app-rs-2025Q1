@@ -2,6 +2,7 @@ import './App.css';
 import { Component } from 'react';
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
+import Footer from './components/Footer/Footer';
 
 type State = {
   query: string;
@@ -28,6 +29,7 @@ class App extends Component<unknown, State> {
       <>
         <Header onSearch={this.handleSearch} />
         <Main query={this.state.query} />
+        <Footer />
       </>
     );
   }
