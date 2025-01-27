@@ -12,6 +12,13 @@ class App extends Component<unknown, State> {
     query: '',
   };
 
+  componentDidMount(): void {
+    const savedQuery = localStorage.getItem('searchValue');
+    if (savedQuery) {
+      this.setState({ query: savedQuery });
+    }
+  }
+
   handleSearch = (query: string) => {
     this.setState({ query });
   };
