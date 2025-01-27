@@ -1,7 +1,7 @@
 import styles from './MainContent.module.css';
 import { Component, ReactNode } from 'react';
 import Card from '../Card/Card';
-import { getArtworks } from '../../api/apiService';
+import { fetchArtworks } from '../../api/apiService';
 
 type CardProps = {
   artist_title: string;
@@ -16,16 +16,35 @@ type State = {
   artworks: Array<CardProps>;
 };
 
-class MainContent extends Component<unknown, State> {
+type Props = {
+  query: string;
+};
+
+class MainContent extends Component<Props, State> {
   state: State = {
     artworks: [],
   };
 
   componentDidMount(): void {
-    getArtworks().then((data) => {
-      this.setState({ artworks: data });
-    });
+    this.fetchData(this.props.query);
   }
+
+  componentDidUpdate(prevProps: Props): void {
+    if (prevProps.query !== this.props.query) {
+      this.fetchData(this.props.query);
+    }
+  }
+
+  fetchData = async (query: string) => {
+    const storageQuery = localStorage.getItem('searchValue');
+    if (storageQuery) {
+      const data = await fetchArtworks(storageQuery);
+      this.setState({ artworks: data });
+    } else {
+      const data = await fetchArtworks(query);
+      this.setState({ artworks: data });
+    }
+  };
 
   render(): ReactNode {
     return (
