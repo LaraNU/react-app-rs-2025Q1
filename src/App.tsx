@@ -1,7 +1,7 @@
 import './App.css';
 import { Component } from 'react';
 import Header from './components/Header/Header';
-import MainContent from './components/MainContent/MainContent';
+import Main from './components/Main/Main';
 
 type State = {
   query: string;
@@ -27,8 +27,7 @@ class App extends Component<unknown, State> {
     return (
       <>
         <Header onSearch={this.handleSearch} />
-        <div className="frauncesFontLight">Monet Art Explorer</div>
-        <MainContent query={this.state.query} />
+        <Main query={this.state.query} />
       </>
     );
   }

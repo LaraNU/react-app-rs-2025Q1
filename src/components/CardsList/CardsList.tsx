@@ -1,4 +1,4 @@
-import styles from './MainContent.module.css';
+import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
 import Card from '../Card/Card';
 import { fetchArtworks } from '../../api/apiService';
@@ -20,7 +20,7 @@ type Props = {
   query: string;
 };
 
-class MainContent extends Component<Props, State> {
+class CardsList extends Component<Props, State> {
   state: State = {
     artworks: [],
   };
@@ -48,23 +48,21 @@ class MainContent extends Component<Props, State> {
 
   render(): ReactNode {
     return (
-      <main className={styles.main}>
-        <ul className={styles.cardsList}>
-          {this.state.artworks.map((artwork) => (
-            <Card
-              key={artwork.id}
-              id={artwork.id}
-              image_id={artwork.image_id}
-              title={artwork.title}
-              artist_title={artwork.artist_title}
-              place_of_origin={artwork.place_of_origin}
-              date_display={artwork.date_display}
-            />
-          ))}
-        </ul>
-      </main>
+      <ul className={styles.cardsList}>
+        {this.state.artworks.map((artwork) => (
+          <Card
+            key={artwork.id}
+            id={artwork.id}
+            image_id={artwork.image_id}
+            title={artwork.title}
+            artist_title={artwork.artist_title}
+            place_of_origin={artwork.place_of_origin}
+            date_display={artwork.date_display}
+          />
+        ))}
+      </ul>
     );
   }
 }
 
-export default MainContent;
+export default CardsList;
