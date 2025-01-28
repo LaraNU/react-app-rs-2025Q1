@@ -1,4 +1,5 @@
 import styles from './Search.module.css';
+import searchIcon from '../../assets/search-icon.svg';
 import { Component, ReactNode } from 'react';
 import { FormEvent } from 'react';
 
@@ -48,11 +49,7 @@ class Search extends Component<Props, State> {
           value={this.state.searchValue}
         />
         <button className={styles.searchBtn}>
-          <img
-            className={styles.searchIcon}
-            src="/src/assets/search-icon.svg"
-            alt="search"
-          />
+          <img className={styles.searchIcon} src={searchIcon} alt="search" />
         </button>
       </form>
     );
