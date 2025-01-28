@@ -4,6 +4,7 @@ import CardsList from '../CardsList/CardsList';
 
 type Props = {
   query: string;
+  searchPerformed: boolean;
 };
 
 class Main extends Component<Props> {
@@ -11,7 +12,10 @@ class Main extends Component<Props> {
     return (
       <main className={styles.main}>
         <div className="pageTitle">Monet Art Explorer</div>
-        <CardsList query={this.props.query} />
+        <CardsList
+          query={this.props.query}
+          searchPerformed={this.props.searchPerformed}
+        />
       </main>
     );
   }

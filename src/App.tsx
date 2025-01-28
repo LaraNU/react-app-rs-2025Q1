@@ -6,11 +6,13 @@ import Footer from './components/Footer/Footer';
 
 type State = {
   query: string;
+  searchPerformed: boolean;
 };
 
 class App extends Component<unknown, State> {
   state: State = {
     query: '',
+    searchPerformed: false,
   };
 
   componentDidMount(): void {
@@ -21,14 +23,17 @@ class App extends Component<unknown, State> {
   }
 
   handleSearch = (query: string) => {
-    this.setState({ query });
+    this.setState({ query, searchPerformed: true });
   };
 
   render() {
     return (
       <>
         <Header onSearch={this.handleSearch} />
-        <Main query={this.state.query} />
+        <Main
+          query={this.state.query}
+          searchPerformed={this.state.searchPerformed}
+        />
         <Footer />
       </>
     );

@@ -1,6 +1,7 @@
 import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
 import Card from '../Card/Card';
+import Loader from '../Loader/Loader';
 import { fetchArtworks } from '../../api/apiService';
 
 type CardProps = {
@@ -14,15 +15,18 @@ type CardProps = {
 
 type State = {
   artworks: Array<CardProps>;
+  loaded: boolean;
 };
 
 type Props = {
   query: string;
+  searchPerformed: boolean;
 };
 
 class CardsList extends Component<Props, State> {
   state: State = {
     artworks: [],
+    loaded: false,
   };
 
   componentDidMount(): void {
@@ -39,17 +43,18 @@ class CardsList extends Component<Props, State> {
     const storageQuery = localStorage.getItem('searchValue');
     if (storageQuery) {
       const data = await fetchArtworks(storageQuery);
-      this.setState({ artworks: data });
+      this.setState({ artworks: data, loaded: true });
     } else {
       const data = await fetchArtworks(query);
-      this.setState({ artworks: data });
+      this.setState({ artworks: data, loaded: true });
     }
   };
 
   render(): ReactNode {
     return (
       <>
-        {this.state.artworks.length === 0 && (
+        {!this.state.loaded ? <Loader /> : false}
+        {this.props.searchPerformed && this.state.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
               Sorry, we couldn&apos;t find any results for your search &#128577;
