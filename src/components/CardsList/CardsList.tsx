@@ -48,19 +48,36 @@ class CardsList extends Component<Props, State> {
 
   render(): ReactNode {
     return (
-      <ul className={styles.cardsList}>
-        {this.state.artworks.map((artwork) => (
-          <Card
-            key={artwork.id}
-            id={artwork.id}
-            image_id={artwork.image_id}
-            title={artwork.title}
-            artist_title={artwork.artist_title}
-            place_of_origin={artwork.place_of_origin}
-            date_display={artwork.date_display}
-          />
-        ))}
-      </ul>
+      <>
+        {this.state.artworks.length === 0 && (
+          <div className={styles.notFoundMsg}>
+            <p className={styles.textMsg}>
+              Sorry, we couldn&apos;t find any results for your search &#128577;
+            </p>
+            <p className={styles.textExp}>
+              Try searching for other famous artworks, such as:{' '}
+              <span>Bordighera,</span> <span>Water Lilies,</span>{' '}
+              <span>Cliff Walk at Pourville</span> and etc
+            </p>
+            <p className={styles.textExp}>
+              This might help you discover something interesting!
+            </p>
+          </div>
+        )}
+        <ul className={styles.cardsList}>
+          {this.state.artworks.map((artwork) => (
+            <Card
+              key={artwork.id}
+              id={artwork.id}
+              image_id={artwork.image_id}
+              title={artwork.title}
+              artist_title={artwork.artist_title}
+              place_of_origin={artwork.place_of_origin}
+              date_display={artwork.date_display}
+            />
+          ))}
+        </ul>
+      </>
     );
   }
 }
