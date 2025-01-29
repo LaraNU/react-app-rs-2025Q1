@@ -12,7 +12,7 @@ class Main extends Component<Props> {
   render(): ReactNode {
     return (
       <main className={styles.main}>
-        <div className="pageTitle">Monet Art Explorer</div>
+        <h1 className="pageTitle">Monet Art Explorer</h1>
         <CardsList
           query={this.props.query}
           searchPerformed={this.props.searchPerformed}
