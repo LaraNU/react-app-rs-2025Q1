@@ -49,7 +49,7 @@ export const fetchArtworks = async (title?: string) => {
     const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
     if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
+      throw new Error(`Error: ${response.status}`);
     }
 
     const result = await response.json();
