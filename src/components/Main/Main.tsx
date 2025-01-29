@@ -1,6 +1,7 @@
 import styles from './Main.module.css';
 import { Component, ReactNode } from 'react';
 import CardsList from '../CardsList/CardsList';
+import { ErrorButton } from '../ErrorButton/ErrorButton';
 
 type Props = {
   query: string;
@@ -16,6 +17,7 @@ class Main extends Component<Props> {
           query={this.props.query}
           searchPerformed={this.props.searchPerformed}
         />
+        <ErrorButton />
       </main>
     );
   }
