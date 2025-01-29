@@ -1,15 +1,15 @@
 import './App.css';
 import { Component } from 'react';
-import Header from './components/Header/Header';
-import Main from './components/Main/Main';
-import Footer from './components/Footer/Footer';
+import { Header } from './components/Header/Header';
+import { Main } from './components/Main/Main';
+import { Footer } from './components/Footer/Footer';
 
 type State = {
   query: string;
   searchPerformed: boolean;
 };
 
-class App extends Component<unknown, State> {
+export class App extends Component<unknown, State> {
   state: State = {
     query: '',
     searchPerformed: false,
@@ -39,5 +39,3 @@ class App extends Component<unknown, State> {
     );
   }
 }
-
-export default App;

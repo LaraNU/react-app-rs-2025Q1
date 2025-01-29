@@ -11,7 +11,7 @@ type Props = {
   onSearch: (query: string) => void;
 };
 
-class Search extends Component<Props, State> {
+export class Search extends Component<Props, State> {
   state: State = {
     searchValue: '',
   };
@@ -55,5 +55,3 @@ class Search extends Component<Props, State> {
     );
   }
 }
-
-export default Search;

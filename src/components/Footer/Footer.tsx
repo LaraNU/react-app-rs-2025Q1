@@ -2,7 +2,7 @@ import styles from './Footer.module.css';
 import logoGithub from '../../assets/icon-github.svg';
 import { Component, ReactNode } from 'react';
 
-class Footer extends Component {
+export class Footer extends Component {
   render(): ReactNode {
     return (
       <footer className={styles.footer}>
@@ -19,5 +19,3 @@ class Footer extends Component {
     );
   }
 }
-
-export default Footer;

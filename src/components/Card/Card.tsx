@@ -10,7 +10,7 @@ type CardProps = {
   title: string;
 };
 
-class Card extends Component<CardProps, unknown> {
+export class Card extends Component<CardProps, unknown> {
   render(): ReactNode {
     return (
       <li id={this.props.id.toString()} className={styles.card}>
@@ -32,5 +32,3 @@ class Card extends Component<CardProps, unknown> {
     );
   }
 }
-
-export default Card;

@@ -1,6 +1,6 @@
 import styles from './Main.module.css';
 import { Component, ReactNode } from 'react';
-import CardsList from '../CardsList/CardsList';
+import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   searchPerformed: boolean;
 };
 
-class Main extends Component<Props> {
+export class Main extends Component<Props> {
   render(): ReactNode {
     return (
       <main className={styles.main}>
@@ -22,5 +22,3 @@ class Main extends Component<Props> {
     );
   }
 }
-
-export default Main;

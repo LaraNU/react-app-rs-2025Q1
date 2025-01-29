@@ -1,7 +1,7 @@
 import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
-import Card from '../Card/Card';
-import Loader from '../Loader/Loader';
+import { Card } from '../Card/Card';
+import { Loader } from '../Loader/Loader';
 import { fetchArtworks } from '../../api/apiService';
 
 type CardProps = {
@@ -23,7 +23,7 @@ type Props = {
   searchPerformed: boolean;
 };
 
-class CardsList extends Component<Props, State> {
+export class CardsList extends Component<Props, State> {
   state: State = {
     artworks: [],
     loaded: false,
@@ -86,5 +86,3 @@ class CardsList extends Component<Props, State> {
     );
   }
 }
-
-export default CardsList;
