@@ -1,4 +1,5 @@
-const BASE_URL = 'https://api.artic.edu/api/v1/artworks/search';
+const BASE_URL = 'https://api.artic.edu/api/v1';
+const PATH_SEARCH = '/artworks/search';
 
 type QueryPart =
   | { term: Record<string, string | number | boolean> }
@@ -45,7 +46,7 @@ export const fetchArtworks = async (title?: string) => {
   const params = buildParams(title);
 
   try {
-    const response = await fetch(`${BASE_URL}?params=${params}`);
+    const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
     if (!response.ok) {
       throw new Error(`Ошибка: ${response.status}`);
