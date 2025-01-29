@@ -1,5 +1,6 @@
 import styles from './Card.module.css';
 import { Component, ReactNode } from 'react';
+import { getImageUrl } from '../../api/apiService';
 
 export type CardProps = {
   artistTitle: string;
@@ -16,7 +17,7 @@ export class Card extends Component<CardProps, unknown> {
       <li id={this.props.id.toString()} className={styles.card}>
         <div className={styles.cardImg}>
           <img
-            src={`https://www.artic.edu/iiif/2/${this.props.imageId}/full/400,/0/default.jpg`}
+            src={getImageUrl(this.props.imageId, '400')}
             alt={this.props.title}
           />
         </div>
