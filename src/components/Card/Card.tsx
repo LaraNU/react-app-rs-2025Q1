@@ -1,12 +1,12 @@
 import styles from './Card.module.css';
 import { Component, ReactNode } from 'react';
 
-type CardProps = {
-  artist_title: string;
-  date_display: string;
+export type CardProps = {
+  artistTitle: string;
+  dateDisplay: string;
   id: number;
-  image_id: string;
-  place_of_origin: string;
+  imageId: string;
+  placeOfOrigin: string;
   title: string;
 };
 
@@ -16,16 +16,16 @@ export class Card extends Component<CardProps, unknown> {
       <li id={this.props.id.toString()} className={styles.card}>
         <div className={styles.cardImg}>
           <img
-            src={`https://www.artic.edu/iiif/2/${this.props.image_id}/full/400,/0/default.jpg`}
+            src={`https://www.artic.edu/iiif/2/${this.props.imageId}/full/400,/0/default.jpg`}
             alt={this.props.title}
           />
         </div>
         <div className={styles.cardDesc}>
           <p className={styles.cardTitle}>
-            {this.props.title}, {this.props.artist_title}
+            {this.props.title}, {this.props.artistTitle}
           </p>
           <p className={styles.cardDate}>
-            {this.props.place_of_origin}, {this.props.date_display}
+            {this.props.placeOfOrigin}, {this.props.dateDisplay}
           </p>
         </div>
       </li>

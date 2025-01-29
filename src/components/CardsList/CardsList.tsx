@@ -1,10 +1,10 @@
 import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
-import { Card } from '../Card/Card';
+import { Card, CardProps } from '../Card/Card';
 import { Loader } from '../Loader/Loader';
 import { fetchArtworks } from '../../api/apiService';
 
-type CardProps = {
+type APIArtwork = {
   artist_title: string;
   date_display: string;
   id: number;
@@ -39,15 +39,35 @@ export class CardsList extends Component<Props, State> {
     }
   }
 
-  fetchData = async (query: string) => {
+  private fetchData = async (query: string) => {
     const storageQuery = localStorage.getItem('searchValue');
+    let data: APIArtwork[] = [];
+
     if (storageQuery) {
-      const data = await fetchArtworks(storageQuery);
-      this.setState({ artworks: data, loaded: true });
+      data = await fetchArtworks(storageQuery);
     } else {
-      const data = await fetchArtworks(query);
-      this.setState({ artworks: data, loaded: true });
+      data = await fetchArtworks(query);
     }
+
+    const transformedData = data.map(
+      ({
+        artist_title,
+        date_display,
+        id,
+        image_id,
+        place_of_origin,
+        title,
+      }) => ({
+        artistTitle: artist_title,
+        dateDisplay: date_display,
+        id,
+        imageId: image_id,
+        placeOfOrigin: place_of_origin,
+        title,
+      })
+    );
+
+    this.setState({ artworks: transformedData, loaded: true });
   };
 
   render(): ReactNode {
@@ -74,11 +94,11 @@ export class CardsList extends Component<Props, State> {
             <Card
               key={artwork.id}
               id={artwork.id}
-              image_id={artwork.image_id}
+              imageId={artwork.imageId}
               title={artwork.title}
-              artist_title={artwork.artist_title}
-              place_of_origin={artwork.place_of_origin}
-              date_display={artwork.date_display}
+              artistTitle={artwork.artistTitle}
+              placeOfOrigin={artwork.placeOfOrigin}
+              dateDisplay={artwork.dateDisplay}
             />
           ))}
         </ul>
