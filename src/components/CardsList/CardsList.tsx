@@ -15,18 +15,18 @@ type APIArtwork = {
 
 type State = {
   artworks: Array<CardProps>;
-  loaded: boolean;
+  isLoaded: boolean;
 };
 
 type Props = {
   query: string;
-  searchPerformed: boolean;
+  isSearchPerformed: boolean;
 };
 
 export class CardsList extends Component<Props, State> {
   state: State = {
     artworks: [],
-    loaded: false,
+    isLoaded: false,
   };
 
   componentDidMount(): void {
@@ -67,14 +67,14 @@ export class CardsList extends Component<Props, State> {
       })
     );
 
-    this.setState({ artworks: transformedData, loaded: true });
+    this.setState({ artworks: transformedData, isLoaded: true });
   };
 
   render(): ReactNode {
     return (
       <>
-        {!this.state.loaded ? <Loader /> : false}
-        {this.props.searchPerformed && this.state.artworks.length === 0 && (
+        {!this.state.isLoaded ? <Loader /> : false}
+        {this.props.isSearchPerformed && this.state.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
               Sorry, we couldn&apos;t find any results for your search &#128577;

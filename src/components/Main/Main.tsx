@@ -15,7 +15,7 @@ export class Main extends Component<Props> {
         <h1 className="pageTitle">Monet Art Explorer</h1>
         <CardsList
           query={this.props.query}
-          searchPerformed={this.props.searchPerformed}
+          isSearchPerformed={this.props.searchPerformed}
         />
         <ErrorButton />
       </main>
