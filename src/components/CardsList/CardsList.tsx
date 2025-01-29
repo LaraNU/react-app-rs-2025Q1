@@ -73,7 +73,7 @@ export class CardsList extends Component<Props, State> {
   render(): ReactNode {
     return (
       <>
-        {!this.state.isLoaded ? <Loader /> : false}
+        {!this.state.isLoaded && <Loader />}
         {this.props.isSearchPerformed && this.state.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
