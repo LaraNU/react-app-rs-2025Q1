@@ -20,7 +20,7 @@
 
 .input::placeholder {
   color: var(--main-color-text);
-  font-family: Avenir;
+  font-family: 'Avenir', sans-serif;
 }
 
 .input:focus {
