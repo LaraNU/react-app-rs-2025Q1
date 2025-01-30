@@ -45,20 +45,26 @@ const buildParams = (title?: string) => {
 export const fetchArtworks = async (title?: string) => {
   const params = buildParams(title);
 
-  try {
-    const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
+  const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+  if (!response.ok) {
+    let message = '';
+
+    if (response.status >= 400 && response.status < 500) {
+      message = `Client error (${response.status} ${response.statusText}): Please check your request.`;
+    } else if (response.status >= 500) {
+      message = `Server error (${response.status} ${response.statusText}): Please try again later.`;
+    } else {
+      message = `${response.status} ${response.statusText}`;
     }
 
-    const result = await response.json();
-
-    return result.data;
-  } catch (error) {
-    console.error('Error fetching artworks:', error);
-    return [];
+    console.error(message);
+    throw new Error(message);
   }
+
+  const result = await response.json();
+
+  return result.data;
 };
 
 export const getImageUrl = (id: string, size: string) => {
