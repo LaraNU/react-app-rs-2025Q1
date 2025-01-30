@@ -16,6 +16,7 @@ type APIArtwork = {
 type State = {
   artworks: Array<CardProps>;
   isLoaded: boolean;
+  errorMessage: string | null;
 };
 
 type Props = {
@@ -27,6 +28,7 @@ export class CardsList extends Component<Props, State> {
   state: State = {
     artworks: [],
     isLoaded: false,
+    errorMessage: null,
   };
 
   componentDidMount(): void {
@@ -43,36 +45,55 @@ export class CardsList extends Component<Props, State> {
     const storageQuery = localStorage.getItem('searchValue');
     let data: APIArtwork[] = [];
 
-    if (storageQuery) {
-      data = await fetchArtworks(storageQuery);
-    } else {
-      data = await fetchArtworks(query);
+    try {
+      if (storageQuery) {
+        data = await fetchArtworks(storageQuery);
+      } else {
+        data = await fetchArtworks(query);
+      }
+
+      const transformedData = data.map(
+        ({
+          artist_title,
+          date_display,
+          id,
+          image_id,
+          place_of_origin,
+          title,
+        }) => ({
+          artistTitle: artist_title,
+          dateDisplay: date_display,
+          id,
+          imageId: image_id,
+          placeOfOrigin: place_of_origin,
+          title,
+        })
+      );
+
+      this.setState({ artworks: transformedData, isLoaded: true });
+    } catch (error) {
+      let message = '';
+      if (error instanceof TypeError) {
+        message = 'An unexpected error occurred. Please try again later.';
+      } else {
+        message = (error as Error).message;
+      }
+
+      this.setState({
+        errorMessage: message,
+        isLoaded: true,
+      });
     }
-
-    const transformedData = data.map(
-      ({
-        artist_title,
-        date_display,
-        id,
-        image_id,
-        place_of_origin,
-        title,
-      }) => ({
-        artistTitle: artist_title,
-        dateDisplay: date_display,
-        id,
-        imageId: image_id,
-        placeOfOrigin: place_of_origin,
-        title,
-      })
-    );
-
-    this.setState({ artworks: transformedData, isLoaded: true });
   };
 
   render(): ReactNode {
     return (
       <>
+        {this.state.errorMessage && (
+          <div className={styles.errorMessage}>
+            <p>{this.state.errorMessage}</p>
+          </div>
+        )}
         {!this.state.isLoaded && <Loader />}
         {this.props.isSearchPerformed && this.state.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>

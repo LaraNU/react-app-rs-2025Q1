@@ -30,3 +30,9 @@
 .textExp span {
   font-style: italic;
 }
+
+.errorMessage {
+  margin: auto 8px;
+  font-size: 1.5rem;
+  text-align: center;
+}
