@@ -2,91 +2,16 @@ import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
 import { Card, CardProps } from '../Card/Card';
 import { Skeleton } from '../Skeleton/Skeleton';
-import { fetchArtworks } from '../../api/apiService';
 
-type APIArtwork = {
-  artist_title: string;
-  date_display: string;
-  id: number;
-  image_id: string;
-  place_of_origin: string;
-  title: string;
-};
-
-type State = {
+type Props = {
+  query: string;
+  isSearchPerformed: boolean;
   artworks: Array<CardProps>;
   isLoaded: boolean;
   errorMessage: string | null;
 };
 
-type Props = {
-  query: string;
-  isSearchPerformed: boolean;
-};
-
-export class CardsList extends Component<Props, State> {
-  state: State = {
-    artworks: [],
-    isLoaded: false,
-    errorMessage: null,
-  };
-
-  componentDidMount(): void {
-    this.fetchData(this.props.query);
-  }
-
-  componentDidUpdate(prevProps: Props): void {
-    if (prevProps.query !== this.props.query) {
-      this.fetchData(this.props.query);
-      this.setState({ isLoaded: false });
-    }
-  }
-
-  private fetchData = async (query: string) => {
-    const storageQuery = localStorage.getItem('searchValue');
-    let data: APIArtwork[] = [];
-
-    try {
-      if (storageQuery) {
-        data = await fetchArtworks(storageQuery);
-      } else {
-        data = await fetchArtworks(query);
-      }
-
-      const transformedData = data.map(
-        ({
-          artist_title,
-          date_display,
-          id,
-          image_id,
-          place_of_origin,
-          title,
-        }) => ({
-          artistTitle: artist_title,
-          dateDisplay: date_display,
-          id,
-          imageId: image_id,
-          placeOfOrigin: place_of_origin,
-          title,
-        })
-      );
-
-      this.setState({ artworks: transformedData, isLoaded: true });
-    } catch (error) {
-      let message = '';
-      if (error instanceof TypeError) {
-        message = 'An unexpected error occurred. Please try again later.';
-      } else {
-        message = (error as Error).message;
-      }
-
-      this.setState({
-        errorMessage: message,
-        isLoaded: true,
-      });
-    }
-  };
-
+export class CardsList extends Component<Props> {
   skeletonCards = () => {
     return Array.from({ length: 12 }, (_, index) => <Skeleton key={index} />);
   };
@@ -94,13 +19,13 @@ export class CardsList extends Component<Props, State> {
   render(): ReactNode {
     return (
       <>
-        {this.state.errorMessage && (
+        {this.props.errorMessage && (
           <div className={styles.errorMessage}>
-            <p>{this.state.errorMessage}</p>
+            <p>{this.props.errorMessage}</p>
           </div>
         )}
 
-        {this.props.isSearchPerformed && this.state.artworks.length === 0 && (
+        {this.props.isSearchPerformed && this.props.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
               Sorry, we couldn&apos;t find any results for your search &#128577;
@@ -117,9 +42,9 @@ export class CardsList extends Component<Props, State> {
         )}
 
         <ul className={styles.cardsList}>
-          {!this.state.isLoaded && this.skeletonCards()}
+          {!this.props.isLoaded && this.skeletonCards()}
 
-          {this.state.artworks.map((artwork) => (
+          {this.props.artworks.map((artwork) => (
             <Card
               key={artwork.id}
               id={artwork.id}
