@@ -1,5 +1,5 @@
 import './App.css';
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Footer } from './components/Footer/Footer';
@@ -22,11 +22,11 @@ export class App extends Component<unknown, State> {
     }
   }
 
-  handleSearch = (query: string) => {
+  handleSearch = (query: string): void => {
     this.setState({ query, searchPerformed: true });
   };
 
-  render() {
+  render(): ReactNode {
     return (
       <>
         <Header onSearch={this.handleSearch} />

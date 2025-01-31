@@ -1,3 +1,5 @@
+import { APIArtwork, APIResponse } from '../types/types';
+
 const BASE_URL = 'https://api.artic.edu/api/v1';
 const PATH_SEARCH = '/artworks/search';
 
@@ -16,7 +18,7 @@ interface QueryParams {
   page: number;
 }
 
-const buildParams = (title?: string) => {
+const buildParams = (title?: string): string => {
   const query: QueryParams = {
     query: {
       bool: {
@@ -42,13 +44,13 @@ const buildParams = (title?: string) => {
   return encodeURIComponent(JSON.stringify(query));
 };
 
-export const fetchArtworks = async (title?: string) => {
+export const fetchArtworks = async (title?: string): Promise<APIArtwork[]> => {
   const params = buildParams(title);
 
   const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
   if (!response.ok) {
-    let message = '';
+    let message: string = '';
 
     if (response.status >= 400 && response.status < 500) {
       message = `Client error (${response.status} ${response.statusText}): Please check your request.`;
@@ -62,12 +64,12 @@ export const fetchArtworks = async (title?: string) => {
     throw new Error(message);
   }
 
-  const result = await response.json();
+  const result: APIResponse = await response.json();
 
   return result.data;
 };
 
-export const getImageUrl = (id: string, size: string) => {
+export const getImageUrl = (id: string, size: string): string => {
   const IMAGE_BASE_URL = 'https://www.artic.edu/iiif/2/';
   return `${IMAGE_BASE_URL}${id}/full/${size},/0/default.jpg`;
 };

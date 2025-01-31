@@ -1,18 +1,19 @@
 import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
-import { Card, CardProps } from '../Card/Card';
+import { Card } from '../Card/Card';
+import { Card as CardType } from '../../types/types';
 import { Skeleton } from '../Skeleton/Skeleton';
 
 type Props = {
   query: string;
   isSearchPerformed: boolean;
-  artworks: Array<CardProps>;
+  artworks: CardType[];
   isLoaded: boolean;
   errorMessage: string | null;
 };
 
 export class CardsList extends Component<Props> {
-  skeletonCards = () => {
+  private skeletonCards = () => {
     return Array.from({ length: 12 }, (_, index) => <Skeleton key={index} />);
   };
 

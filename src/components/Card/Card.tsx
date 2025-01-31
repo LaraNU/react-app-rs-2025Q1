@@ -2,7 +2,7 @@ import styles from './Card.module.css';
 import { Component, ReactNode } from 'react';
 import { getImageUrl } from '../../api/apiService';
 
-export type CardProps = {
+type Props = {
   artistTitle: string;
   dateDisplay: string;
   id: number;
@@ -11,7 +11,7 @@ export type CardProps = {
   title: string;
 };
 
-export class Card extends Component<CardProps, unknown> {
+export class Card extends Component<Props> {
   render(): ReactNode {
     return (
       <li id={this.props.id.toString()} className={styles.card}>

@@ -3,19 +3,11 @@ import { Component, ReactNode } from 'react';
 import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
 import { fetchArtworks } from '../../api/apiService';
+import { APIArtwork } from '../../types/types';
 
 type Props = {
   query: string;
   searchPerformed: boolean;
-};
-
-type APIArtwork = {
-  artist_title: string;
-  date_display: string;
-  id: number;
-  image_id: string;
-  place_of_origin: string;
-  title: string;
 };
 
 type Card = {
@@ -28,7 +20,7 @@ type Card = {
 };
 
 type State = {
-  artworks: Array<Card>;
+  artworks: Card[];
   isLoaded: boolean;
   errorMessage: string | null;
 };
@@ -51,7 +43,7 @@ export class Main extends Component<Props, State> {
     }
   }
 
-  private fetchData = async (query: string) => {
+  private fetchData = async (query: string): Promise<void> => {
     const storageQuery = localStorage.getItem('searchValue');
     let data: APIArtwork[] = [];
 

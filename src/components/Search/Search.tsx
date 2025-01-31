@@ -23,7 +23,7 @@ export class Search extends Component<Props, State> {
     }
   }
 
-  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const trimmedQuery = this.state.searchValue.trim();
 
