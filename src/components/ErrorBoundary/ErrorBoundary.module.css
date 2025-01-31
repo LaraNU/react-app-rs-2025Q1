@@ -1,0 +1,22 @@
+.wrapper {
+  margin: auto;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.reloadBtn {
+  padding: 10px 15px;
+  font-size: inherit;
+  border-radius: 20px;
+  background-color: var(--addition-color-text);
+  color: var(--addition-bg-color);
+}
+
+@media (hover: hover) {
+  .reloadBtn {
+    cursor: pointer;
+  }
+}
