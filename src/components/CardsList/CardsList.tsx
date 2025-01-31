@@ -1,7 +1,7 @@
 import styles from './CardsList.module.css';
 import { Component, ReactNode } from 'react';
 import { Card, CardProps } from '../Card/Card';
-import { Loader } from '../Loader/Loader';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { fetchArtworks } from '../../api/apiService';
 
 type APIArtwork = {
@@ -38,6 +38,7 @@ export class CardsList extends Component<Props, State> {
   componentDidUpdate(prevProps: Props): void {
     if (prevProps.query !== this.props.query) {
       this.fetchData(this.props.query);
+      this.setState({ isLoaded: false });
     }
   }
 
@@ -86,6 +87,10 @@ export class CardsList extends Component<Props, State> {
     }
   };
 
+  skeletonCards = () => {
+    return Array.from({ length: 12 }, (_, index) => <Skeleton key={index} />);
+  };
+
   render(): ReactNode {
     return (
       <>
@@ -94,7 +99,7 @@ export class CardsList extends Component<Props, State> {
             <p>{this.state.errorMessage}</p>
           </div>
         )}
-        {!this.state.isLoaded && <Loader />}
+
         {this.props.isSearchPerformed && this.state.artworks.length === 0 && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
@@ -110,7 +115,10 @@ export class CardsList extends Component<Props, State> {
             </p>
           </div>
         )}
+
         <ul className={styles.cardsList}>
+          {!this.state.isLoaded && this.skeletonCards()}
+
           {this.state.artworks.map((artwork) => (
             <Card
               key={artwork.id}
