@@ -1,7 +1,7 @@
 import styles from './Main.module.css';
-import { Component, ReactNode } from 'react';
 import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
+import { useState, useEffect } from 'react';
 import { fetchArtworks } from '../../api/apiService';
 import { APIArtwork } from '../../types/types';
 
@@ -19,31 +19,17 @@ type Card = {
   title: string;
 };
 
-type State = {
-  artworks: Card[];
-  isLoaded: boolean;
-  errorMessage: string | null;
-};
+export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
+  const [artworks, setArtworks] = useState<Card[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-export class Main extends Component<Props, State> {
-  state: State = {
-    artworks: [],
-    isLoaded: false,
-    errorMessage: null,
-  };
+  useEffect(() => {
+    fetchData(query);
+    setIsLoaded(false);
+  }, [query]);
 
-  componentDidMount(): void {
-    this.fetchData(this.props.query);
-  }
-
-  componentDidUpdate(prevProps: Props): void {
-    if (prevProps.query !== this.props.query) {
-      this.fetchData(this.props.query);
-      this.setState({ isLoaded: false });
-    }
-  }
-
-  private fetchData = async (query: string): Promise<void> => {
+  const fetchData = async (query: string): Promise<void> => {
     const storageQuery = localStorage.getItem('searchValue');
     let data: APIArtwork[] = [];
 
@@ -72,7 +58,8 @@ export class Main extends Component<Props, State> {
         })
       );
 
-      this.setState({ artworks: transformedData, isLoaded: true });
+      setArtworks(transformedData);
+      setIsLoaded(true);
     } catch (error) {
       let message = '';
       if (error instanceof TypeError) {
@@ -81,26 +68,22 @@ export class Main extends Component<Props, State> {
         message = (error as Error).message;
       }
 
-      this.setState({
-        errorMessage: message,
-        isLoaded: true,
-      });
+      setErrorMessage(message);
+      setIsLoaded(true);
     }
   };
 
-  render(): ReactNode {
-    return (
-      <main className={styles.main}>
-        <h1 className="pageTitle">Monet Art Explorer</h1>
-        <CardsList
-          query={this.props.query}
-          isSearchPerformed={this.props.searchPerformed}
-          artworks={this.state.artworks}
-          isLoaded={this.state.isLoaded}
-          errorMessage={this.state.errorMessage}
-        />
-        <ErrorButton />
-      </main>
-    );
-  }
-}
+  return (
+    <main className={styles.main}>
+      <h1 className="pageTitle">Monet Art Explorer</h1>
+      <CardsList
+        query={query}
+        isSearchPerformed={searchPerformed}
+        artworks={artworks}
+        isLoaded={isLoaded}
+        errorMessage={errorMessage}
+      />
+      <ErrorButton />
+    </main>
+  );
+};
