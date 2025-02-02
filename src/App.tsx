@@ -1,41 +1,30 @@
 import './App.css';
-import { Component, ReactNode } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Footer } from './components/Footer/Footer';
 
-type State = {
-  query: string;
-  searchPerformed: boolean;
-};
+export const App = () => {
+  const [query, setQuery] = useState<string>('');
+  const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
 
-export class App extends Component<unknown, State> {
-  state: State = {
-    query: '',
-    searchPerformed: false,
-  };
-
-  componentDidMount(): void {
+  useEffect(() => {
     const savedQuery = localStorage.getItem('searchValue');
     if (savedQuery) {
-      this.setState({ query: savedQuery });
+      setQuery(savedQuery);
     }
-  }
+  }, []);
 
-  handleSearch = (query: string): void => {
-    this.setState({ query, searchPerformed: true });
+  const handleSearch = (query: string): void => {
+    setQuery(query);
+    setSearchPerformed(true);
   };
 
-  render(): ReactNode {
-    return (
-      <>
-        <Header onSearch={this.handleSearch} />
-        <Main
-          query={this.state.query}
-          searchPerformed={this.state.searchPerformed}
-        />
-        <Footer />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Header onSearch={handleSearch} />
+      <Main query={query} searchPerformed={searchPerformed} />
+      <Footer />
+    </>
+  );
+};
