@@ -5,7 +5,9 @@ const PATH_SEARCH = '/artworks/search';
 
 type QueryPart =
   | { term: Record<string, string | number | boolean> }
-  | { wildcard: { title: string } };
+  | { wildcard: { title: string } }
+  | { bool: { should?: QueryPart[] } }
+  | { match: { title: string } };
 
 interface QueryParams {
   query: {
@@ -37,7 +39,12 @@ const buildParams = (title?: string): string => {
 
   if (title) {
     query.query.bool.must.push({
-      wildcard: { title: `*${title}*` },
+      bool: {
+        should: [
+          { wildcard: { title: `*${title}*` } },
+          { match: { title: title } },
+        ],
+      },
     });
   }
 
