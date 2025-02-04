@@ -1,34 +1,22 @@
 import styles from './Search.module.css';
 import searchIcon from '../../assets/search-icon.svg';
-import { useEffect } from 'react';
 import { useState } from 'react';
 import { FormEvent } from 'react';
+import { useQueryFromLS } from '../../utils/useQueryFromLS';
 
 type Props = {
   onSearch: (query: string) => void;
 };
 
 export const Search = (props: Props) => {
-  const [searchValue, setSearchValue] = useState('');
-
-  useEffect(() => {
-    const queryFromStorage = localStorage.getItem('searchValue');
-    if (queryFromStorage) {
-      setSearchValue(queryFromStorage);
-    }
-  }, []);
+  const [searchValue, setSearchValue] = useQueryFromLS('searchValue', '');
+  const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const trimmedQuery = searchValue.trim();
-
-    if (trimmedQuery === '') {
-      localStorage.removeItem('searchValue');
-      props.onSearch('');
-    } else {
-      localStorage.setItem('searchValue', trimmedQuery);
-      props.onSearch(trimmedQuery);
-    }
+    const trimmedQuery = inputValue.trim();
+    setSearchValue(trimmedQuery);
+    props.onSearch(trimmedQuery);
   };
 
   return (
@@ -38,9 +26,9 @@ export const Search = (props: Props) => {
         type="text"
         placeholder="Search"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setSearchValue(e.target.value)
+          setInputValue(e.target.value)
         }
-        value={searchValue}
+        defaultValue={searchValue}
       />
       <button className={styles.searchBtn}>
         <img className={styles.searchIcon} src={searchIcon} alt="search" />
