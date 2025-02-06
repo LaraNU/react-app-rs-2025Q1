@@ -1,4 +1,4 @@
-import { APIArtwork, APIResponse } from '../types/types';
+import { APIResponse } from '../types/types';
 
 const BASE_URL = 'https://api.artic.edu/api/v1';
 const PATH_SEARCH = '/artworks/search';
@@ -20,7 +20,7 @@ interface QueryParams {
   page: number;
 }
 
-const buildParams = (title?: string): string => {
+const buildParams = (currPage: number, title?: string) => {
   const query: QueryParams = {
     query: {
       bool: {
@@ -34,7 +34,7 @@ const buildParams = (title?: string): string => {
     },
     fields: `id,title,image_id,artist_title,date_display,place_of_origin`,
     limit: 12,
-    page: 1,
+    page: currPage,
   };
 
   if (title) {
@@ -51,8 +51,11 @@ const buildParams = (title?: string): string => {
   return encodeURIComponent(JSON.stringify(query));
 };
 
-export const fetchArtworks = async (title?: string): Promise<APIArtwork[]> => {
-  const params = buildParams(title);
+export const fetchArtworks = async (
+  currPage: number,
+  title?: string
+): Promise<APIResponse> => {
+  const params = buildParams(currPage, title);
 
   const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
@@ -73,7 +76,7 @@ export const fetchArtworks = async (title?: string): Promise<APIArtwork[]> => {
 
   const result: APIResponse = await response.json();
 
-  return result.data;
+  return { data: result.data, pagination: result.pagination };
 };
 
 export const getImageUrl = (id: string, size: string): string => {
