@@ -26,7 +26,7 @@ export const useQueryFromLS = (
 
   useEffect(() => {
     localStorage.setItem('searchPerformed', String(searchPerformed));
-  }, [searchValue]);
+  }, [searchPerformed]);
 
   return [searchValue, setSearchValue, searchPerformed, setSearchPerformed];
 };
