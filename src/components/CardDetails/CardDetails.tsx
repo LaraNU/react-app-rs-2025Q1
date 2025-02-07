@@ -21,16 +21,22 @@ type Props = {
 export const CardDetails = ({ id, onClose }: Props) => {
   const [artworks, setArtworks] = useState<ArtworkDetails | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsVisible(false);
+
     if (id !== null) {
       fetchData(id);
       setIsVisible(true);
+      setIsLoaded(false);
     }
   }, [id]);
 
   const fetchData = async (id: number) => {
     try {
+      setIsLoaded(false);
+
       const data = await fetchArtworkDetails(id);
 
       const transformedData: ArtworkDetails = {
@@ -45,6 +51,7 @@ export const CardDetails = ({ id, onClose }: Props) => {
       };
 
       setArtworks(transformedData);
+      setIsLoaded(true);
     } catch (error) {
       console.error(error);
     }
@@ -59,25 +66,12 @@ export const CardDetails = ({ id, onClose }: Props) => {
     setIsVisible(false);
     setArtworks(null);
     onClose();
+    setIsLoaded(true);
   };
-
-  if (!artworks) {
-    return (
-      <div className={styles.cardDetails}>
-        <div className={styles.card}>
-          <div className={styles.image}></div>
-          <div className={styles.content}>
-            <p className={styles.text}></p>
-            <p className={styles.text}></p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
-      {isVisible && artworks && (
+      {isVisible && (
         <div className={styles.cardDetails}>
           <div className={styles.wrapper}>
             <button
@@ -86,27 +80,45 @@ export const CardDetails = ({ id, onClose }: Props) => {
             >
               X
             </button>
-            <div className={styles.cardImg}>
-              <img
-                src={getImageUrl(artworks.imageId, '600')}
-                alt={artworks.title}
-              />
-            </div>
-            <div className={styles.cardDesc}>
-              <p className={styles.title}>
-                {artworks.title} , {artworks.placeOfOrigin}
-              </p>
-              <p className={styles.artistDisplay}>{artworks.artistDisplay}</p>
-              <p className={styles.mediumDisplay}>
-                <span>Medium:</span> {artworks.mediumDisplay}
-              </p>
-              <p className={styles.styleTitle}>
-                <span>Style:</span> {artworks.styleTitle}
-              </p>
-              <p className={styles.description}>
-                <span>Description:</span> {removeHtmlTags(artworks.description)}
-              </p>
-            </div>
+
+            {!isLoaded ? (
+              <div className={styles.card}>
+                <div className={styles.image}></div>
+                <div className={styles.content}>
+                  <p className={styles.text}></p>
+                  <p className={styles.text}></p>
+                </div>
+              </div>
+            ) : (
+              artworks && (
+                <>
+                  <div className={styles.cardImg}>
+                    <img
+                      src={getImageUrl(artworks.imageId, '600')}
+                      alt={artworks.title}
+                    />
+                  </div>
+                  <div className={styles.cardDesc}>
+                    <p className={styles.title}>
+                      {artworks.title} , {artworks.placeOfOrigin}
+                    </p>
+                    <p className={styles.artistDisplay}>
+                      {artworks.artistDisplay}
+                    </p>
+                    <p className={styles.mediumDisplay}>
+                      <span>Medium:</span> {artworks.mediumDisplay}
+                    </p>
+                    <p className={styles.styleTitle}>
+                      <span>Style:</span> {artworks.styleTitle}
+                    </p>
+                    <p className={styles.description}>
+                      <span>Description:</span>{' '}
+                      {removeHtmlTags(artworks.description)}
+                    </p>
+                  </div>
+                </>
+              )
+            )}
           </div>
         </div>
       )}
