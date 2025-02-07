@@ -1,4 +1,4 @@
-import { APIResponse } from '../types/types';
+import { APIResponse, APIResponseDetails } from '../types/types';
 
 const BASE_URL = 'https://api.artic.edu/api/v1';
 const PATH_SEARCH = '/artworks/search';
@@ -82,4 +82,13 @@ export const fetchArtworks = async (
 export const getImageUrl = (id: string, size: string): string => {
   const IMAGE_BASE_URL = 'https://www.artic.edu/iiif/2/';
   return `${IMAGE_BASE_URL}${id}/full/${size},/0/default.jpg`;
+};
+
+export const fetchArtworkDetails = async (id: number) => {
+  const fields =
+    'artist_display,medium_display,short_description,style_title,title,image_id,place_of_origin';
+  const response = await fetch(`${BASE_URL}/artworks/${id}?fields${fields}`);
+  const result: APIResponseDetails = await response.json();
+
+  return result.data;
 };
