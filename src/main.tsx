@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import './index.css';
 import { App } from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary.tsx';
@@ -11,7 +11,9 @@ if (rootElement) {
     <StrictMode>
       <ErrorBoundary>
         <BrowserRouter>
-          <App />
+          <Routes>
+            <Route path="/" element={<App />} />
+          </Routes>
         </BrowserRouter>
       </ErrorBoundary>
     </StrictMode>

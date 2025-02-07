@@ -87,10 +87,13 @@ export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
   const handleCardClick = (id: number) => {
     setIsCardOpen(true);
     setSelectedCardId(id);
+    setSearchParams({ page: currentPage.toString(), details: id.toString() });
   };
 
   const handleCardClose = () => {
     setIsCardOpen(false);
+    setSelectedCardId(null);
+    setSearchParams({ page: currentPage.toString() });
   };
 
   return (
