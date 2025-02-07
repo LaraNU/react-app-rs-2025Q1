@@ -1,0 +1,44 @@
+.cardDetails {
+  display: flex;
+  flex-direction: column;
+  padding: 80px 20px;
+}
+
+.wrapper {
+  background-color: var(--addition-color-text);
+  color: var(--bg-color);
+  position: relative;
+  padding: 60px 20px 20px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: transparent;
+  font-size: 2rem;
+  color: var(--bg-color);
+}
+
+.cardImg {
+  height: fit-content;
+}
+
+.cardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cardDesc {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 1.1rem;
+}
+
+.title,
+span {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
