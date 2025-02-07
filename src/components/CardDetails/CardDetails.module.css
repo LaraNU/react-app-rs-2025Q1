@@ -42,3 +42,65 @@ span {
   font-weight: 500;
   font-size: 1.2rem;
 }
+
+.card {
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.card .image {
+  height: 400px;
+  background: rgba(51, 51, 39);
+  background: linear-gradient(
+    110deg,
+    rgba(51, 51, 39, 1) 8%,
+    rgba(41, 41, 31, 1) 18%,
+    rgba(51, 51, 39, 1) 33%
+  );
+  background-size: 200% 100%;
+  -webkit-animation: 1.5s shine linear infinite;
+  animation: 1.5s shine linear infinite;
+}
+
+.text {
+  height: 60px;
+  margin-bottom: 15px;
+  background: rgb(228, 228, 228);
+  background: linear-gradient(
+    110deg,
+    rgba(228, 228, 228, 1) 8%,
+    rgba(212, 212, 212, 1) 18%,
+    rgba(228, 228, 228, 1) 33%
+  );
+  background-size: 200% 100%;
+  -webkit-animation: 1.5s shine linear infinite;
+  animation: 1.5s shine linear infinite;
+}
+
+.card .content {
+  width: 100%;
+  height: 250px;
+  padding: 20px;
+  background: rgb(255, 253, 248);
+  background: linear-gradient(
+    110deg,
+    rgba(255, 253, 248, 1) 8%,
+    rgba(254, 250, 241, 1) 18%,
+    rgba(255, 253, 248, 1) 33%
+  );
+  background-size: 200% 100%;
+  -webkit-animation: 1.5s shine linear infinite;
+  animation: 1.5s shine linear infinite;
+}
+
+@-webkit-keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}

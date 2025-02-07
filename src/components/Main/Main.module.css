@@ -12,3 +12,13 @@
   display: grid;
   grid-template-columns: auto 45%;
 }
+
+.wrapperTwoColumns {
+  display: grid;
+  grid-template-columns: auto 45%;
+}
+
+.wrapperOneColumn {
+  display: grid;
+  grid-template-columns: 1fr;
+}

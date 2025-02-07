@@ -15,9 +15,10 @@ type ArtworkDetails = {
 
 type Props = {
   id: number | null;
+  onClose: () => void;
 };
 
-export const CardDetails = ({ id }: Props) => {
+export const CardDetails = ({ id, onClose }: Props) => {
   const [artworks, setArtworks] = useState<ArtworkDetails | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
@@ -29,20 +30,24 @@ export const CardDetails = ({ id }: Props) => {
   }, [id]);
 
   const fetchData = async (id: number) => {
-    const data = await fetchArtworkDetails(id);
+    try {
+      const data = await fetchArtworkDetails(id);
 
-    const transformedData: ArtworkDetails = {
-      artistDisplay: data.artist_display || '-',
-      description: data.description || '-',
-      mediumDisplay: data.medium_display || '-',
-      shortDescription: data.short_description || '-',
-      styleTitle: data.style_title || '-',
-      title: data.title || '-',
-      imageId: data.image_id,
-      placeOfOrigin: data.place_of_origin || '-',
-    };
+      const transformedData: ArtworkDetails = {
+        artistDisplay: data.artist_display || '-',
+        description: data.description || '-',
+        mediumDisplay: data.medium_display || '-',
+        shortDescription: data.short_description || '-',
+        styleTitle: data.style_title || '-',
+        title: data.title || '-',
+        imageId: data.image_id,
+        placeOfOrigin: data.place_of_origin || '-',
+      };
 
-    setArtworks(transformedData);
+      setArtworks(transformedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const removeHtmlTags = (html: string) => {
@@ -50,17 +55,33 @@ export const CardDetails = ({ id }: Props) => {
     return doc.body.textContent || '';
   };
 
+  const handleCardToggle = () => {
+    setIsVisible(false);
+    setArtworks(null);
+    onClose();
+  };
+
   if (!artworks) {
-    return <div>Artwork not found.</div>;
+    return (
+      <div className={styles.cardDetails}>
+        <div className={styles.card}>
+          <div className={styles.image}></div>
+          <div className={styles.content}>
+            <p className={styles.text}></p>
+            <p className={styles.text}></p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
-      {isVisible && (
+      {isVisible && artworks && (
         <div className={styles.cardDetails}>
           <div className={styles.wrapper}>
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={() => handleCardToggle()}
               className={styles.closeBtn}
             >
               X
