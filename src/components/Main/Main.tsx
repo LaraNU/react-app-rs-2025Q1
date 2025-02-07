@@ -24,7 +24,7 @@ type Card = {
 
 export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get('page'));
+  const currentPage = Number(searchParams.get('page')) || 1;
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const [isCardOpen, setIsCardOpen] = useState(false);
   const [artworks, setArtworks] = useState<Card[]>([]);
