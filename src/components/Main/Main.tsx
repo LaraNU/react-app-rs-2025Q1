@@ -25,7 +25,7 @@ type Card = {
 export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page'));
-
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const [artworks, setArtworks] = useState<Card[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -83,18 +83,23 @@ export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
     setSearchParams({ page: page.toString() });
   };
 
+  const handleCardClick = (id: number) => {
+    setSelectedCardId(id);
+  };
+
   return (
     <main className={styles.main}>
       <h1 className="pageTitle">Monet Art Explorer</h1>
       <div className={styles.wrapper}>
         <CardsList
+          onClick={handleCardClick}
           query={query}
           isSearchPerformed={searchPerformed}
           artworks={artworks}
           isLoaded={isLoaded}
           errorMessage={errorMessage}
         />
-        <CardDetails id={16571} />
+        <CardDetails id={selectedCardId} />
       </div>
       <Pagination
         totalPages={totalPages}

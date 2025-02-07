@@ -9,6 +9,7 @@ type Props = {
   artworks: CardType[];
   isLoaded: boolean;
   errorMessage: string | null;
+  onClick: (id: number) => void;
 };
 
 export const CardsList = (props: Props): React.JSX.Element => {
@@ -47,6 +48,7 @@ export const CardsList = (props: Props): React.JSX.Element => {
 
         {props.artworks.map((artwork) => (
           <Card
+            onClick={props.onClick}
             key={artwork.id}
             id={artwork.id}
             imageId={artwork.imageId}
