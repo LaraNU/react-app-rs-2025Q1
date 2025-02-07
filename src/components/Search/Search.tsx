@@ -2,6 +2,7 @@ import styles from './Search.module.css';
 import searchIcon from '../../assets/search-icon.svg';
 import { useState } from 'react';
 import { FormEvent } from 'react';
+import { useSearchParams } from 'react-router';
 import { useQueryFromLS } from '../../utils/useQueryFromLS';
 
 type Props = {
@@ -9,6 +10,9 @@ type Props = {
 };
 
 export const Search = (props: Props) => {
+  const [, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [searchValue, setSearchValue] = useQueryFromLS('searchValue', '');
   const [inputValue, setInputValue] = useState('');
 
@@ -17,6 +21,9 @@ export const Search = (props: Props) => {
     const trimmedQuery = inputValue.trim();
     setSearchValue(trimmedQuery);
     props.onSearch(trimmedQuery);
+
+    setCurrentPage(1);
+    setSearchParams({ page: currentPage.toString() });
   };
 
   return (

@@ -1,7 +1,10 @@
 import styles from './Main.module.css';
 import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
+import { Pagination } from '../Pagination/Pagination';
+import { CardDetails } from '../CardDetails/CardDetails';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router';
 import { fetchArtworks } from '../../api/apiService';
 import { APIArtwork } from '../../types/types';
 
@@ -20,25 +23,28 @@ type Card = {
 };
 
 export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page'));
+
   const [artworks, setArtworks] = useState<Card[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetchData(query);
+    fetchData(currentPage, query);
     setIsLoaded(false);
-  }, [query]);
+  }, [query, currentPage]);
 
-  const fetchData = async (query: string): Promise<void> => {
-    const storageQuery = localStorage.getItem('searchValue');
+  const fetchData = async (page: number, query: string): Promise<void> => {
     let data: APIArtwork[] = [];
+    let fetch;
 
     try {
-      if (storageQuery) {
-        data = await fetchArtworks(storageQuery);
-      } else {
-        data = await fetchArtworks(query);
-      }
+      fetch = await fetchArtworks(page, query);
+
+      data = fetch.data;
+      setTotalPages(fetch.pagination.total_pages);
 
       const transformedData = data.map(
         ({
@@ -73,15 +79,27 @@ export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
     }
   };
 
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: page.toString() });
+  };
+
   return (
     <main className={styles.main}>
       <h1 className="pageTitle">Monet Art Explorer</h1>
-      <CardsList
-        query={query}
-        isSearchPerformed={searchPerformed}
-        artworks={artworks}
-        isLoaded={isLoaded}
-        errorMessage={errorMessage}
+      <div className={styles.wrapper}>
+        <CardsList
+          query={query}
+          isSearchPerformed={searchPerformed}
+          artworks={artworks}
+          isLoaded={isLoaded}
+          errorMessage={errorMessage}
+        />
+        <CardDetails id={16571} />
+      </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
       />
       <ErrorButton />
     </main>
