@@ -9,6 +9,7 @@ describe('test error button', () => {
   });
 
   it('throws an error when clicked', () => {
+    render(<ErrorButton />);
     expect(() => {
       const button = screen.getByRole('button', { name: /error/i });
 
