@@ -9,10 +9,12 @@ describe('test', () => {
   });
 
   it('Displays the year 2025', () => {
+    render(<Footer />);
     expect(screen.getByText(/2025/i)).toBeDefined();
   });
 
   it('GitHub link is correct', () => {
+    render(<Footer />);
     const githubLink = screen.getByRole('link', { name: /github/i });
     expect(githubLink).toHaveProperty('href', 'https://github.com/LaraNU');
 
