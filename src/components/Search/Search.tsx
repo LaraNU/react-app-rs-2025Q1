@@ -27,7 +27,7 @@ export const Search = (props: Props) => {
   };
 
   return (
-    <form className={styles.searchForm} onSubmit={handleSubmit}>
+    <form className={styles.searchForm} onSubmit={handleSubmit} role="form">
       <input
         className={styles.input}
         type="text"
