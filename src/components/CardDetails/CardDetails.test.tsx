@@ -1,5 +1,11 @@
 import { describe, it, vi } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from '@testing-library/react';
 import { CardDetails } from './CardDetails';
 import '@testing-library/jest-dom';
 
@@ -20,12 +26,22 @@ vi.mock('../../api/apiService', () => ({
 }));
 
 describe('test card details component', () => {
-  it('renders card details correctly with provided data', () => {
-    render(<CardDetails id={1} onClose={onCloseMock} />);
+  it('renders card details correctly with provided data', async () => {
+    act(() => {
+      render(<CardDetails id={1} onClose={onCloseMock} />);
+    });
+
+    await waitFor(() => screen.getByText(/Water Lilies/i));
+
+    expect(screen.getByText(/Water Lilies/i)).toBeInTheDocument();
+    expect(screen.getByText(/Monet/i)).toBeInTheDocument();
+    expect(screen.getByText(/Oil on canvas/i)).toBeInTheDocument();
   });
 
   it('fetches and displays artwork details', async () => {
-    render(<CardDetails id={1} onClose={() => {}} />);
+    act(() => {
+      render(<CardDetails id={1} onClose={() => {}} />);
+    });
 
     await waitFor(() => screen.getByText(/Water Lilies/i));
 
@@ -35,7 +51,9 @@ describe('test card details component', () => {
   });
 
   it('hides the card when the close button is clicked', async () => {
-    render(<CardDetails id={1} onClose={() => {}} />);
+    act(() => {
+      render(<CardDetails id={1} onClose={() => {}} />);
+    });
 
     await waitFor(() => screen.getByText(/Water Lilies/i));
 
