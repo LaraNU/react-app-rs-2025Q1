@@ -28,3 +28,18 @@ export type Card = {
   placeOfOrigin: string;
   title: string;
 };
+
+type APIArtworkDetails = {
+  artist_display: string;
+  description: string;
+  medium_display: string;
+  short_description: string;
+  style_title: string;
+  title: string;
+  image_id: string;
+  place_of_origin: string;
+};
+
+export type APIResponseDetails = {
+  data: APIArtworkDetails;
+};

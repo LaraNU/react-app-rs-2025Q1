@@ -1,57 +1,47 @@
 import styles from './Search.module.css';
 import searchIcon from '../../assets/search-icon.svg';
-import { Component, ReactNode } from 'react';
+import { useState } from 'react';
 import { FormEvent } from 'react';
-
-type State = {
-  searchValue: string;
-};
+import { useSearchParams } from 'react-router';
+import { useQueryFromLS } from '../../utils/useQueryFromLS';
 
 type Props = {
   onSearch: (query: string) => void;
+  setSearchPerformed: (value: boolean) => void;
 };
 
-export class Search extends Component<Props, State> {
-  state: State = {
-    searchValue: '',
-  };
+export const Search = (props: Props) => {
+  const [, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  componentDidMount(): void {
-    const queryFromStorage = localStorage.getItem('searchValue');
-    if (queryFromStorage) {
-      this.setState({ searchValue: queryFromStorage });
-    }
-  }
+  const [searchValue, setSearchValue] = useQueryFromLS('searchValue', '');
+  const [inputValue, setInputValue] = useState('');
 
-  handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const trimmedQuery = this.state.searchValue.trim();
+    const trimmedQuery = inputValue.trim();
+    setSearchValue(trimmedQuery);
+    props.onSearch(trimmedQuery);
 
-    if (trimmedQuery === '') {
-      localStorage.removeItem('searchValue');
-      this.props.onSearch('');
-    } else {
-      localStorage.setItem('searchValue', trimmedQuery);
-      this.props.onSearch(trimmedQuery);
-    }
+    props.setSearchPerformed(true);
+    setCurrentPage(1);
+    setSearchParams({ page: currentPage.toString() });
   };
 
-  render(): ReactNode {
-    return (
-      <form className={styles.searchForm} onSubmit={this.handleSubmit}>
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="Search"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            this.setState({ searchValue: e.target.value })
-          }
-          value={this.state.searchValue}
-        />
-        <button className={styles.searchBtn}>
-          <img className={styles.searchIcon} src={searchIcon} alt="search" />
-        </button>
-      </form>
-    );
-  }
-}
+  return (
+    <form className={styles.searchForm} onSubmit={handleSubmit} role="form">
+      <input
+        className={styles.input}
+        type="text"
+        placeholder="Search"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setInputValue(e.target.value)
+        }
+        defaultValue={searchValue}
+      />
+      <button className={styles.searchBtn}>
+        <img className={styles.searchIcon} src={searchIcon} alt="search" />
+      </button>
+    </form>
+  );
+};

@@ -1,13 +1,17 @@
 import styles from './Main.module.css';
-import { Component, ReactNode } from 'react';
 import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
+import { Pagination } from '../Pagination/Pagination';
+import { CardDetails } from '../CardDetails/CardDetails';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router';
 import { fetchArtworks } from '../../api/apiService';
 import { APIArtwork } from '../../types/types';
 
 type Props = {
   query: string;
   searchPerformed: boolean;
+  setSearchPerformed: (value: boolean) => void;
 };
 
 type Card = {
@@ -19,88 +23,115 @@ type Card = {
   title: string;
 };
 
-type State = {
-  artworks: Card[];
-  isLoaded: boolean;
-  errorMessage: string | null;
-};
+export const Main = ({
+  query,
+  searchPerformed,
+  setSearchPerformed,
+}: Props): React.JSX.Element => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+  const [isCardOpen, setIsCardOpen] = useState(false);
+  const [artworks, setArtworks] = useState<Card[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
-export class Main extends Component<Props, State> {
-  state: State = {
-    artworks: [],
-    isLoaded: false,
-    errorMessage: null,
+  const fetchData = useCallback(
+    async (page: number, query: string): Promise<void> => {
+      let data: APIArtwork[] = [];
+      let fetch;
+
+      try {
+        fetch = await fetchArtworks(page, query);
+
+        data = fetch.data;
+        setTotalPages(fetch.pagination.total_pages);
+
+        const transformedData = data.map(
+          ({
+            artist_title,
+            date_display,
+            id,
+            image_id,
+            place_of_origin,
+            title,
+          }) => ({
+            artistTitle: artist_title,
+            dateDisplay: date_display,
+            id,
+            imageId: image_id,
+            placeOfOrigin: place_of_origin,
+            title,
+          })
+        );
+
+        setArtworks(transformedData);
+        setIsLoaded(true);
+        setSearchPerformed(false);
+      } catch (error) {
+        let message = '';
+        if (error instanceof TypeError) {
+          message = 'An unexpected error occurred. Please try again later.';
+        } else {
+          message = (error as Error).message;
+        }
+
+        setErrorMessage(message);
+        setIsLoaded(true);
+      }
+    },
+    [setSearchPerformed]
+  );
+
+  useEffect(() => {
+    const page = searchPerformed ? 1 : currentPage;
+    fetchData(page, query);
+    setIsLoaded(false);
+
+    console.log(searchPerformed, 'searchPerformed');
+  }, [query, currentPage, searchPerformed, fetchData]);
+
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: page.toString() });
   };
 
-  componentDidMount(): void {
-    this.fetchData(this.props.query);
-  }
-
-  componentDidUpdate(prevProps: Props): void {
-    if (prevProps.query !== this.props.query) {
-      this.fetchData(this.props.query);
-      this.setState({ isLoaded: false });
-    }
-  }
-
-  private fetchData = async (query: string): Promise<void> => {
-    const storageQuery = localStorage.getItem('searchValue');
-    let data: APIArtwork[] = [];
-
-    try {
-      if (storageQuery) {
-        data = await fetchArtworks(storageQuery);
-      } else {
-        data = await fetchArtworks(query);
-      }
-
-      const transformedData = data.map(
-        ({
-          artist_title,
-          date_display,
-          id,
-          image_id,
-          place_of_origin,
-          title,
-        }) => ({
-          artistTitle: artist_title,
-          dateDisplay: date_display,
-          id,
-          imageId: image_id,
-          placeOfOrigin: place_of_origin,
-          title,
-        })
-      );
-
-      this.setState({ artworks: transformedData, isLoaded: true });
-    } catch (error) {
-      let message = '';
-      if (error instanceof TypeError) {
-        message = 'An unexpected error occurred. Please try again later.';
-      } else {
-        message = (error as Error).message;
-      }
-
-      this.setState({
-        errorMessage: message,
-        isLoaded: true,
-      });
-    }
+  const handleCardClick = (id: number) => {
+    setIsCardOpen(true);
+    setSelectedCardId(id);
+    setSearchParams({ page: currentPage.toString(), details: id.toString() });
   };
 
-  render(): ReactNode {
-    return (
-      <main className={styles.main}>
-        <h1 className="pageTitle">Monet Art Explorer</h1>
+  const handleCardClose = () => {
+    setIsCardOpen(false);
+    setSelectedCardId(null);
+    setSearchParams({ page: currentPage.toString() });
+  };
+
+  return (
+    <main className={styles.main}>
+      <h1 className="pageTitle">Monet Art Explorer</h1>
+      <div
+        className={
+          isCardOpen ? styles.wrapperTwoColumns : styles.wrapperOneColumn
+        }
+      >
         <CardsList
-          query={this.props.query}
-          isSearchPerformed={this.props.searchPerformed}
-          artworks={this.state.artworks}
-          isLoaded={this.state.isLoaded}
-          errorMessage={this.state.errorMessage}
+          onClick={handleCardClick}
+          query={query}
+          isSearchPerformed={searchPerformed}
+          artworks={artworks}
+          isLoaded={isLoaded}
+          errorMessage={errorMessage}
         />
-        <ErrorButton />
-      </main>
-    );
-  }
-}
+        <CardDetails id={selectedCardId} onClose={handleCardClose} />
+      </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+      <ErrorButton />
+    </main>
+  );
+};

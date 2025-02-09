@@ -1,11 +1,13 @@
-import { APIArtwork, APIResponse } from '../types/types';
+import { APIResponse, APIResponseDetails } from '../types/types';
 
 const BASE_URL = 'https://api.artic.edu/api/v1';
 const PATH_SEARCH = '/artworks/search';
 
 type QueryPart =
   | { term: Record<string, string | number | boolean> }
-  | { wildcard: { title: string } };
+  | { wildcard: { title: string } }
+  | { bool: { should?: QueryPart[] } }
+  | { match: { title: string } };
 
 interface QueryParams {
   query: {
@@ -18,7 +20,7 @@ interface QueryParams {
   page: number;
 }
 
-const buildParams = (title?: string): string => {
+const buildParams = (currPage: number, title?: string) => {
   const query: QueryParams = {
     query: {
       bool: {
@@ -32,20 +34,28 @@ const buildParams = (title?: string): string => {
     },
     fields: `id,title,image_id,artist_title,date_display,place_of_origin`,
     limit: 12,
-    page: 1,
+    page: currPage,
   };
 
   if (title) {
     query.query.bool.must.push({
-      wildcard: { title: `*${title}*` },
+      bool: {
+        should: [
+          { wildcard: { title: `*${title}*` } },
+          { match: { title: title } },
+        ],
+      },
     });
   }
 
   return encodeURIComponent(JSON.stringify(query));
 };
 
-export const fetchArtworks = async (title?: string): Promise<APIArtwork[]> => {
-  const params = buildParams(title);
+export const fetchArtworks = async (
+  currPage: number,
+  title?: string
+): Promise<APIResponse> => {
+  const params = buildParams(currPage, title);
 
   const response = await fetch(`${BASE_URL}${PATH_SEARCH}?params=${params}`);
 
@@ -66,10 +76,19 @@ export const fetchArtworks = async (title?: string): Promise<APIArtwork[]> => {
 
   const result: APIResponse = await response.json();
 
-  return result.data;
+  return { data: result.data, pagination: result.pagination };
 };
 
 export const getImageUrl = (id: string, size: string): string => {
   const IMAGE_BASE_URL = 'https://www.artic.edu/iiif/2/';
   return `${IMAGE_BASE_URL}${id}/full/${size},/0/default.jpg`;
+};
+
+export const fetchArtworkDetails = async (id: number) => {
+  const fields =
+    'artist_display,medium_display,short_description,style_title,title,image_id,place_of_origin';
+  const response = await fetch(`${BASE_URL}/artworks/${id}?fields${fields}`);
+  const result: APIResponseDetails = await response.json();
+
+  return result.data;
 };

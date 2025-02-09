@@ -1,25 +1,19 @@
-import { Component, ReactNode } from 'react';
+import { useState } from 'react';
 import styles from './ErrorButton.module.css';
 
-export class ErrorButton extends Component {
-  state = {
-    hasError: false,
+export const ErrorButton = (): React.JSX.Element => {
+  const [hasError, setError] = useState(false);
+
+  const throwError = () => {
+    setError(true);
   };
 
-  throwError = () => {
-    this.setState({
-      hasError: true,
-    });
-  };
-
-  render(): ReactNode {
-    if (this.state.hasError) {
-      throw new Error('Sorry.. there was an error');
-    }
-    return (
-      <button className={styles.errorBtn} onClick={this.throwError}>
-        Error
-      </button>
-    );
+  if (hasError) {
+    throw new Error('Sorry.. there was an error');
   }
-}
+  return (
+    <button className={styles.errorBtn} onClick={throwError}>
+      Error
+    </button>
+  );
+};

@@ -1,41 +1,15 @@
 import './App.css';
-import { Component, ReactNode } from 'react';
-import { Header } from './components/Header/Header';
-import { Main } from './components/Main/Main';
-import { Footer } from './components/Footer/Footer';
+import { HomePage } from './components/pages/HomePage/HomePage';
+import { NotFoundPage } from './components/pages/NotFoundPage/NotFoundPage';
+import { BrowserRouter, Routes, Route } from 'react-router';
 
-type State = {
-  query: string;
-  searchPerformed: boolean;
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
-
-export class App extends Component<unknown, State> {
-  state: State = {
-    query: '',
-    searchPerformed: false,
-  };
-
-  componentDidMount(): void {
-    const savedQuery = localStorage.getItem('searchValue');
-    if (savedQuery) {
-      this.setState({ query: savedQuery });
-    }
-  }
-
-  handleSearch = (query: string): void => {
-    this.setState({ query, searchPerformed: true });
-  };
-
-  render(): ReactNode {
-    return (
-      <>
-        <Header onSearch={this.handleSearch} />
-        <Main
-          query={this.state.query}
-          searchPerformed={this.state.searchPerformed}
-        />
-        <Footer />
-      </>
-    );
-  }
-}

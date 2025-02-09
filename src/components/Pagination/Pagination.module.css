@@ -1,0 +1,27 @@
+.pagination {
+  display: inline-block;
+  margin: 0 0 50px 0;
+}
+
+.pagination button {
+  background-color: transparent;
+  color: var(--addition-color-text);
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: 'Fraunces', serif;
+}
+
+.pagination button.active {
+  background-color: var(--addition-color-text);
+  color: var(--bg-color);
+}
+
+@media (hover: hover) {
+  .pagination button:hover:not(.active) {
+    background-color: var(--bg-color);
+    cursor: pointer;
+  }
+}

@@ -7,3 +7,18 @@
   width: 100%;
   background-color: var(--addition-bg-color);
 }
+
+.wrapper {
+  display: grid;
+  grid-template-columns: auto 45%;
+}
+
+.wrapperTwoColumns {
+  display: grid;
+  grid-template-columns: auto 45%;
+}
+
+.wrapperOneColumn {
+  display: grid;
+  grid-template-columns: 1fr;
+}

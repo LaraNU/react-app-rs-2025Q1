@@ -1,5 +1,4 @@
 import styles from './CardsList.module.css';
-import { Component, ReactNode } from 'react';
 import { Card } from '../Card/Card';
 import { Card as CardType } from '../../types/types';
 import { Skeleton } from '../Skeleton/Skeleton';
@@ -10,23 +9,25 @@ type Props = {
   artworks: CardType[];
   isLoaded: boolean;
   errorMessage: string | null;
+  onClick: (id: number) => void;
 };
 
-export class CardsList extends Component<Props> {
-  private skeletonCards = () => {
+export const CardsList = (props: Props): React.JSX.Element => {
+  const skeletonCards = () => {
     return Array.from({ length: 12 }, (_, index) => <Skeleton key={index} />);
   };
 
-  render(): ReactNode {
-    return (
-      <>
-        {this.props.errorMessage && (
-          <div className={styles.errorMessage}>
-            <p>{this.props.errorMessage}</p>
-          </div>
-        )}
+  return (
+    <>
+      {props.errorMessage && (
+        <div className={styles.errorMessage}>
+          <p>{props.errorMessage}</p>
+        </div>
+      )}
 
-        {this.props.isSearchPerformed && this.props.artworks.length === 0 && (
+      {props.isSearchPerformed &&
+        props.artworks.length === 0 &&
+        props.isLoaded && (
           <div className={styles.notFoundMsg}>
             <p className={styles.textMsg}>
               Sorry, we couldn&apos;t find any results for your search &#128577;
@@ -42,22 +43,22 @@ export class CardsList extends Component<Props> {
           </div>
         )}
 
-        <ul className={styles.cardsList}>
-          {!this.props.isLoaded && this.skeletonCards()}
+      <ul className={styles.cardsList}>
+        {!props.isLoaded && skeletonCards()}
 
-          {this.props.artworks.map((artwork) => (
-            <Card
-              key={artwork.id}
-              id={artwork.id}
-              imageId={artwork.imageId}
-              title={artwork.title}
-              artistTitle={artwork.artistTitle}
-              placeOfOrigin={artwork.placeOfOrigin}
-              dateDisplay={artwork.dateDisplay}
-            />
-          ))}
-        </ul>
-      </>
-    );
-  }
-}
+        {props.artworks.map((artwork) => (
+          <Card
+            onClick={props.onClick}
+            key={artwork.id}
+            id={artwork.id}
+            imageId={artwork.imageId}
+            title={artwork.title}
+            artistTitle={artwork.artistTitle}
+            placeOfOrigin={artwork.placeOfOrigin}
+            dateDisplay={artwork.dateDisplay}
+          />
+        ))}
+      </ul>
+    </>
+  );
+};
