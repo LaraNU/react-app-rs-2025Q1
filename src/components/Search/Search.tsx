@@ -7,6 +7,7 @@ import { useQueryFromLS } from '../../utils/useQueryFromLS';
 
 type Props = {
   onSearch: (query: string) => void;
+  setSearchPerformed: (value: boolean) => void;
 };
 
 export const Search = (props: Props) => {
@@ -22,6 +23,7 @@ export const Search = (props: Props) => {
     setSearchValue(trimmedQuery);
     props.onSearch(trimmedQuery);
 
+    props.setSearchPerformed(true);
     setCurrentPage(1);
     setSearchParams({ page: currentPage.toString() });
   };

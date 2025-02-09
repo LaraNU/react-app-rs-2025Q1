@@ -13,9 +13,8 @@ export const useQueryFromLS = (
     const queryFromStorage = localStorage.getItem(key);
     return queryFromStorage || initialValue;
   });
-  const [searchPerformed, setSearchPerformed] = useState(() => {
-    return localStorage.getItem('searchPerformed') === 'true';
-  });
+
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(key, searchValue);
@@ -23,10 +22,6 @@ export const useQueryFromLS = (
       localStorage.removeItem(key);
     }
   }, [key, searchValue]);
-
-  useEffect(() => {
-    localStorage.setItem('searchPerformed', String(searchPerformed));
-  }, [searchPerformed]);
 
   return [searchValue, setSearchValue, searchPerformed, setSearchPerformed];
 };

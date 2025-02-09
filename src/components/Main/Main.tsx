@@ -3,7 +3,7 @@ import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
 import { Pagination } from '../Pagination/Pagination';
 import { CardDetails } from '../CardDetails/CardDetails';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 import { fetchArtworks } from '../../api/apiService';
 import { APIArtwork } from '../../types/types';
@@ -11,6 +11,7 @@ import { APIArtwork } from '../../types/types';
 type Props = {
   query: string;
   searchPerformed: boolean;
+  setSearchPerformed: (value: boolean) => void;
 };
 
 type Card = {
@@ -22,7 +23,11 @@ type Card = {
   title: string;
 };
 
-export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
+export const Main = ({
+  query,
+  searchPerformed,
+  setSearchPerformed,
+}: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
@@ -32,53 +37,60 @@ export const Main = ({ query, searchPerformed }: Props): React.JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchData(currentPage, query);
-    setIsLoaded(false);
-  }, [query, currentPage]);
+  const fetchData = useCallback(
+    async (page: number, query: string): Promise<void> => {
+      let data: APIArtwork[] = [];
+      let fetch;
 
-  const fetchData = async (page: number, query: string): Promise<void> => {
-    let data: APIArtwork[] = [];
-    let fetch;
+      try {
+        fetch = await fetchArtworks(page, query);
 
-    try {
-      fetch = await fetchArtworks(page, query);
+        data = fetch.data;
+        setTotalPages(fetch.pagination.total_pages);
 
-      data = fetch.data;
-      setTotalPages(fetch.pagination.total_pages);
+        const transformedData = data.map(
+          ({
+            artist_title,
+            date_display,
+            id,
+            image_id,
+            place_of_origin,
+            title,
+          }) => ({
+            artistTitle: artist_title,
+            dateDisplay: date_display,
+            id,
+            imageId: image_id,
+            placeOfOrigin: place_of_origin,
+            title,
+          })
+        );
 
-      const transformedData = data.map(
-        ({
-          artist_title,
-          date_display,
-          id,
-          image_id,
-          place_of_origin,
-          title,
-        }) => ({
-          artistTitle: artist_title,
-          dateDisplay: date_display,
-          id,
-          imageId: image_id,
-          placeOfOrigin: place_of_origin,
-          title,
-        })
-      );
+        setArtworks(transformedData);
+        setIsLoaded(true);
+        setSearchPerformed(false);
+      } catch (error) {
+        let message = '';
+        if (error instanceof TypeError) {
+          message = 'An unexpected error occurred. Please try again later.';
+        } else {
+          message = (error as Error).message;
+        }
 
-      setArtworks(transformedData);
-      setIsLoaded(true);
-    } catch (error) {
-      let message = '';
-      if (error instanceof TypeError) {
-        message = 'An unexpected error occurred. Please try again later.';
-      } else {
-        message = (error as Error).message;
+        setErrorMessage(message);
+        setIsLoaded(true);
       }
+    },
+    [setSearchPerformed]
+  );
 
-      setErrorMessage(message);
-      setIsLoaded(true);
-    }
-  };
+  useEffect(() => {
+    const page = searchPerformed ? 1 : currentPage;
+    fetchData(page, query);
+    setIsLoaded(false);
+
+    console.log(searchPerformed, 'searchPerformed');
+  }, [query, currentPage, searchPerformed, fetchData]);
 
   const handlePageChange = (page: number) => {
     setSearchParams({ page: page.toString() });

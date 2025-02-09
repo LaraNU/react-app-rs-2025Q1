@@ -11,13 +11,16 @@ export const HomePage = () => {
 
   const handleSearch = (query: string): void => {
     setQuery(query);
-    setSearchPerformed(true);
   };
 
   return (
     <>
-      <Header onSearch={handleSearch} />
-      <Main query={query} searchPerformed={searchPerformed} />
+      <Header onSearch={handleSearch} setSearchPerformed={setSearchPerformed} />
+      <Main
+        query={query}
+        searchPerformed={searchPerformed}
+        setSearchPerformed={setSearchPerformed}
+      />
       <Footer />
     </>
   );
