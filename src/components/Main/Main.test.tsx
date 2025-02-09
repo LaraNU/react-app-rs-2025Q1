@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { Main } from './Main';
@@ -8,11 +8,13 @@ const mockMainData = {
   searchPerformed: true,
 };
 
+const setSearchPerformedMock = vi.fn();
+
 describe('test main component', () => {
   it('renders main correctly with provided data', () => {
     render(
       <MemoryRouter>
-        <Main {...mockMainData} />
+        <Main {...mockMainData} setSearchPerformed={setSearchPerformedMock} />
       </MemoryRouter>
     );
   });

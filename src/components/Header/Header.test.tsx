@@ -4,12 +4,16 @@ import { MemoryRouter } from 'react-router';
 import { Header } from './Header';
 
 const mockOnSearch = vi.fn();
+const setSearchPerformedMock = vi.fn();
 
 describe('test header component', () => {
   it('should call onSearch prop when search is performed', () => {
     render(
       <MemoryRouter>
-        <Header onSearch={mockOnSearch} />
+        <Header
+          onSearch={mockOnSearch}
+          setSearchPerformed={setSearchPerformedMock}
+        />
       </MemoryRouter>
     );
 
