@@ -28,6 +28,7 @@ export const Card = (props: Props): React.JSX.Element => {
         <p className={styles.cardDate}>
           {props.placeOfOrigin}, {props.dateDisplay}
         </p>
+        <input className={styles.checkbox} type="checkbox" />
       </div>
     </li>
   );
