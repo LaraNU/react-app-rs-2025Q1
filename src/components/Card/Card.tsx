@@ -1,5 +1,8 @@
 import styles from './Card.module.css';
 import { getImageUrl } from '../../api/apiService';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleCardSelection } from '../../redux/createSlice';
+import { RootState } from '../../redux/store';
 
 type Props = {
   artistTitle: string;
@@ -12,6 +15,12 @@ type Props = {
 };
 
 export const Card = (props: Props): React.JSX.Element => {
+  const selectedCards = useSelector(
+    (state: RootState) => state.selectedCards.cards
+  );
+  const isChecked = selectedCards.includes(props.id);
+  const dispatch = useDispatch();
+
   return (
     <li
       onClick={() => props.onClick(props.id)}
@@ -28,7 +37,13 @@ export const Card = (props: Props): React.JSX.Element => {
         <p className={styles.cardDate}>
           {props.placeOfOrigin}, {props.dateDisplay}
         </p>
-        <input className={styles.checkbox} type="checkbox" />
+        <input
+          className={styles.checkbox}
+          type="checkbox"
+          checked={isChecked}
+          onChange={() => dispatch(toggleCardSelection(props.id))}
+          onClick={(e) => e.stopPropagation()}
+        />
       </div>
     </li>
   );
