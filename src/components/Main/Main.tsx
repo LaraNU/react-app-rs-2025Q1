@@ -3,6 +3,7 @@ import { CardsList } from '../CardsList/CardsList';
 import { ErrorButton } from '../ErrorButton/ErrorButton';
 import { Pagination } from '../Pagination/Pagination';
 import { CardDetails } from '../CardDetails/CardDetails';
+import { Flyout } from '../Flyout/Flyout';
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 import { fetchArtworks } from '../../api/apiService';
@@ -132,6 +133,7 @@ export const Main = ({
         onPageChange={handlePageChange}
       />
       <ErrorButton />
+      <Flyout />
     </main>
   );
 };
