@@ -16,11 +16,7 @@ export const HomePage = () => {
   return (
     <>
       <Header onSearch={handleSearch} setSearchPerformed={setSearchPerformed} />
-      <Main
-        query={query}
-        searchPerformed={searchPerformed}
-        setSearchPerformed={setSearchPerformed}
-      />
+      <Main query={query} searchPerformed={searchPerformed} />
       <Footer />
     </>
   );

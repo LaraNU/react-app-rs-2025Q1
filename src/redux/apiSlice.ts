@@ -68,6 +68,16 @@ export const artworksApi = createApi({
           params: { params: JSON.stringify(params) },
         };
       },
+      transformErrorResponse: (error) => {
+        if ('status' in error) {
+          if (error.status >= '400' && error.status < '500') {
+            return `Client error (${error.status}): Please check your request.`;
+          } else if (error.status >= '500') {
+            return `Server error (${error.status}): Please try again later.`;
+          }
+        }
+        return `Unknown error: ${JSON.stringify(error)}`;
+      },
       transformResponse: (response: {
         data: APIResponse['data'];
         pagination: APIResponse['pagination'];
