@@ -1,5 +1,5 @@
 import styles from './CardDetails.module.css';
-import { getImageUrl } from '../../api/apiService';
+import { getImageUrl } from '../../utils/getImageUrl';
 import { useEffect, useState } from 'react';
 import { useSearchArtworkDetailsQuery } from '../../redux/apiSlice';
 

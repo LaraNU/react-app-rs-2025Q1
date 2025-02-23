@@ -1,5 +1,5 @@
 import styles from './Card.module.css';
-import { getImageUrl } from '../../api/apiService';
+import { getImageUrl } from '../../utils/getImageUrl';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleCardSelection } from '../../redux/createSlice';
 import { RootState } from '../../redux/store';
