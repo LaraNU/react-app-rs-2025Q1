@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { store } from '../../redux/store';
 import '@testing-library/jest-dom';
 import { Card } from './Card';
 
@@ -16,7 +18,11 @@ const mockCardData = {
 
 describe('test card component', () => {
   it('renders card correctly with provided data', () => {
-    render(<Card {...mockCardData} onClick={mockOnClick} />);
+    render(
+      <Provider store={store}>
+        <Card {...mockCardData} onClick={mockOnClick} />
+      </Provider>
+    );
 
     expect(screen.getByText(/Water Lilies/i)).toBeDefined();
     expect(screen.getByText(/Claude Monet/i)).toBeDefined();
@@ -29,7 +35,11 @@ describe('test card component', () => {
   });
 
   it('calls onClick when card is clicked', () => {
-    render(<Card {...mockCardData} onClick={mockOnClick} />);
+    render(
+      <Provider store={store}>
+        <Card {...mockCardData} onClick={mockOnClick} />
+      </Provider>
+    );
 
     fireEvent.click(screen.getByRole('listitem'));
 
