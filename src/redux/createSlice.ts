@@ -1,13 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
+export interface Card {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+}
+
 export interface CardState {
-  cards: number[];
+  selectedCards: Card[];
   isFlyoutVisible: boolean;
 }
 
 const initialState: CardState = {
-  cards: [],
+  selectedCards: [],
   isFlyoutVisible: false,
 };
 
@@ -15,17 +22,24 @@ export const selectedCardsSlice = createSlice({
   name: 'selectedCards',
   initialState,
   reducers: {
-    toggleCardSelection: (state, action: PayloadAction<number>) => {
+    toggleCardSelection: (state, action: PayloadAction<Card>) => {
       state.isFlyoutVisible = true;
-      const cardIndex = state.cards.indexOf(action.payload);
-      if (cardIndex === -1) {
-        state.cards.push(action.payload);
+      const index = state.selectedCards.findIndex(
+        (c) => c.id === action.payload.id
+      );
+
+      if (index === -1) {
+        state.selectedCards.push(action.payload);
       } else {
-        state.cards.splice(cardIndex, 1);
+        state.selectedCards.splice(index, 1);
+      }
+
+      if (state.selectedCards.length === 0) {
+        state.isFlyoutVisible = false;
       }
     },
     unselectAll: (state) => {
-      state.cards = [];
+      state.selectedCards = [];
       state.isFlyoutVisible = false;
     },
   },
@@ -33,7 +47,8 @@ export const selectedCardsSlice = createSlice({
 
 export const { toggleCardSelection, unselectAll } = selectedCardsSlice.actions;
 
-export const selectCard = (state: RootState) => state.selectedCards.cards;
+export const selectCard = (state: RootState) =>
+  state.selectedCards.selectedCards;
 export const selectFlyoutVisibility = (state: RootState) =>
   state.selectedCards.isFlyoutVisible;
 

@@ -16,10 +16,21 @@ type Props = {
 
 export const Card = (props: Props): React.JSX.Element => {
   const selectedCards = useSelector(
-    (state: RootState) => state.selectedCards.cards
+    (state: RootState) => state.selectedCards.selectedCards
   );
-  const isChecked = selectedCards.includes(props.id);
+  const isChecked = selectedCards.some((card) => card.id === props.id);
   const dispatch = useDispatch();
+
+  const handleSelection = () => {
+    dispatch(
+      toggleCardSelection({
+        id: props.id,
+        title: props.title,
+        description: `${props.artistTitle}, ${props.placeOfOrigin}, ${props.dateDisplay}`,
+        url: getImageUrl(props.imageId, '400'),
+      })
+    );
+  };
 
   return (
     <li
@@ -41,7 +52,7 @@ export const Card = (props: Props): React.JSX.Element => {
           className={styles.checkbox}
           type="checkbox"
           checked={isChecked}
-          onChange={() => dispatch(toggleCardSelection(props.id))}
+          onChange={() => handleSelection()}
           onClick={(e) => e.stopPropagation()}
         />
       </div>
