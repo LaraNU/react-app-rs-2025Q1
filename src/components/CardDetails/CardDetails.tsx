@@ -1,17 +1,7 @@
 import styles from './CardDetails.module.css';
-import { getImageUrl, fetchArtworkDetails } from '../../api/apiService';
+import { getImageUrl } from '../../utils/getImageUrl';
 import { useEffect, useState } from 'react';
-
-type ArtworkDetails = {
-  artistDisplay: string;
-  description: string;
-  mediumDisplay: string;
-  shortDescription: string;
-  styleTitle: string;
-  title: string;
-  imageId: string;
-  placeOfOrigin: string;
-};
+import { useSearchArtworkDetailsQuery } from '../../redux/apiSlice';
 
 type Props = {
   id: number | null;
@@ -19,43 +9,21 @@ type Props = {
 };
 
 export const CardDetails = ({ id, onClose }: Props) => {
-  const [artworks, setArtworks] = useState<ArtworkDetails | null>(null);
-  const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const {
+    data: artwork,
+    isLoading,
+    isFetching,
+  } = useSearchArtworkDetailsQuery(id ?? 0, {
+    skip: id === null,
+  });
 
   useEffect(() => {
-    setIsVisible(false);
-
-    if (id !== null) {
-      fetchData(id);
+    if (id) {
       setIsVisible(true);
-      setIsLoaded(false);
     }
   }, [id]);
-
-  const fetchData = async (id: number) => {
-    try {
-      setIsLoaded(false);
-
-      const data = await fetchArtworkDetails(id);
-
-      const transformedData: ArtworkDetails = {
-        artistDisplay: data.artist_display || '-',
-        description: data.description || '-',
-        mediumDisplay: data.medium_display || '-',
-        shortDescription: data.short_description || '-',
-        styleTitle: data.style_title || '-',
-        title: data.title || '-',
-        imageId: data.image_id,
-        placeOfOrigin: data.place_of_origin || '-',
-      };
-
-      setArtworks(transformedData);
-      setIsLoaded(true);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const removeHtmlTags = (html: string) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -64,9 +32,7 @@ export const CardDetails = ({ id, onClose }: Props) => {
 
   const handleCardToggle = () => {
     setIsVisible(false);
-    setArtworks(null);
     onClose();
-    setIsLoaded(true);
   };
 
   return (
@@ -81,7 +47,7 @@ export const CardDetails = ({ id, onClose }: Props) => {
               X
             </button>
 
-            {!isLoaded ? (
+            {isLoading || isFetching ? (
               <div className={styles.card}>
                 <div className={styles.image}></div>
                 <div className={styles.content}>
@@ -90,30 +56,30 @@ export const CardDetails = ({ id, onClose }: Props) => {
                 </div>
               </div>
             ) : (
-              artworks && (
+              artwork && (
                 <>
                   <div className={styles.cardImg}>
                     <img
-                      src={getImageUrl(artworks.imageId, '600')}
-                      alt={artworks.title}
+                      src={getImageUrl(artwork.data.image_id, '600')}
+                      alt={artwork.data.title}
                     />
                   </div>
                   <div className={styles.cardDesc}>
                     <p className={styles.title}>
-                      {artworks.title} , {artworks.placeOfOrigin}
+                      {artwork.data.title} , {artwork.data.place_of_origin}
                     </p>
                     <p className={styles.artistDisplay}>
-                      {artworks.artistDisplay}
+                      {artwork.data.artist_display}
                     </p>
                     <p className={styles.mediumDisplay}>
-                      <span>Medium:</span> {artworks.mediumDisplay}
+                      <span>Medium:</span> {artwork.data.medium_display}
                     </p>
                     <p className={styles.styleTitle}>
-                      <span>Style:</span> {artworks.styleTitle}
+                      <span>Style:</span> {artwork.data.style_title}
                     </p>
                     <p className={styles.description}>
                       <span>Description:</span>{' '}
-                      {removeHtmlTags(artworks.description)}
+                      {removeHtmlTags(artwork.data.description)}
                     </p>
                   </div>
                 </>

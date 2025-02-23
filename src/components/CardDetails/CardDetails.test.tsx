@@ -1,35 +1,42 @@
 import { describe, it, vi } from 'vitest';
-import {
-  render,
-  screen,
-  waitFor,
-  fireEvent,
-  act,
-} from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { CardDetails } from './CardDetails';
+import { Provider } from 'react-redux';
+import { store } from '../../redux/store';
 import '@testing-library/jest-dom';
 
 const onCloseMock = vi.fn();
 
-vi.mock('../../api/apiService', () => ({
-  fetchArtworkDetails: vi.fn().mockResolvedValue({
-    artist_display: 'Monet',
-    description: 'Description here',
-    medium_display: 'Oil on canvas',
-    short_description: 'Short description',
-    style_title: 'Impressionism',
-    title: 'Water Lilies',
-    image_id: 'image_id',
-    place_of_origin: 'France',
-  }),
-  getImageUrl: vi.fn().mockReturnValue('image_url'),
-}));
+vi.mock('../../redux/apiSlice', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../redux/apiSlice')>();
+
+  return {
+    ...actual,
+    useSearchArtworkDetailsQuery: () => ({
+      data: {
+        data: {
+          title: 'Water Lilies',
+          artist_display: 'Monet',
+          medium_display: 'Oil on canvas',
+          place_of_origin: 'France',
+          style_title: 'Impressionism',
+          description: 'Description here',
+          image_id: 'image_id',
+        },
+      },
+      isLoading: false,
+      isFetching: false,
+      error: undefined,
+    }),
+  };
+});
 
 describe('test card details component', () => {
+  const renderWithProvider = (ui: JSX.Element) =>
+    render(<Provider store={store}>{ui}</Provider>);
+
   it('renders card details correctly with provided data', async () => {
-    act(() => {
-      render(<CardDetails id={1} onClose={onCloseMock} />);
-    });
+    renderWithProvider(<CardDetails id={1} onClose={onCloseMock} />);
 
     await waitFor(() => screen.getByText(/Water Lilies/i));
 
@@ -39,9 +46,7 @@ describe('test card details component', () => {
   });
 
   it('fetches and displays artwork details', async () => {
-    act(() => {
-      render(<CardDetails id={1} onClose={() => {}} />);
-    });
+    renderWithProvider(<CardDetails id={1} onClose={() => {}} />);
 
     await waitFor(() => screen.getByText(/Water Lilies/i));
 
@@ -51,9 +56,7 @@ describe('test card details component', () => {
   });
 
   it('hides the card when the close button is clicked', async () => {
-    act(() => {
-      render(<CardDetails id={1} onClose={() => {}} />);
-    });
+    renderWithProvider(<CardDetails id={1} onClose={() => {}} />);
 
     await waitFor(() => screen.getByText(/Water Lilies/i));
 

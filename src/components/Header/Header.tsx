@@ -1,6 +1,7 @@
 import styles from './Header.module.css';
 import logo from '../../assets/logo.png';
 import { Search } from '../Search/Search';
+import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher';
 
 type Props = {
   onSearch: (query: string) => void;
@@ -18,6 +19,7 @@ export const Header = ({
         <span className={styles.logoText}>Monet Art Explorer</span>
       </div>
       <Search onSearch={onSearch} setSearchPerformed={setSearchPerformed} />
+      <ThemeSwitcher />
     </div>
   );
 };

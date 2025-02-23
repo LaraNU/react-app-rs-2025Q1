@@ -1,7 +1,7 @@
-import { Header } from '../../Header/Header';
-import { Main } from '../../Main/Main';
-import { Footer } from '../../Footer/Footer';
-import { useQueryFromLS } from '../../../utils/useQueryFromLS';
+import { Header } from '../../components/Header/Header';
+import { Main } from '../../components/Main/Main';
+import { Footer } from '../../components/Footer/Footer';
+import { useQueryFromLS } from '../../utils/useQueryFromLS';
 
 export const HomePage = () => {
   const [query, setQuery, searchPerformed, setSearchPerformed] = useQueryFromLS(
@@ -16,11 +16,7 @@ export const HomePage = () => {
   return (
     <>
       <Header onSearch={handleSearch} setSearchPerformed={setSearchPerformed} />
-      <Main
-        query={query}
-        searchPerformed={searchPerformed}
-        setSearchPerformed={setSearchPerformed}
-      />
+      <Main query={query} searchPerformed={searchPerformed} />
       <Footer />
     </>
   );

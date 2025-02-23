@@ -11,6 +11,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --bg-color: #fefaf1;
+  --main-color-text: #29291f;
+  --addition-color-text: #403f2b;
+  --addition-bg-color: #e3e2d7;
+}
+
+[data-theme='dark'] {
   --bg-color: #29291f;
   --main-color-text: #f3f1c4;
   --addition-color-text: #fefaf1;
@@ -43,6 +50,9 @@ body {
   height: 100vh;
   background-color: var(--bg-color);
   color: var(--main-color-text);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .pageTitle {

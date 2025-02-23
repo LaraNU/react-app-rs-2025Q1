@@ -1,5 +1,8 @@
 import styles from './Card.module.css';
-import { getImageUrl } from '../../api/apiService';
+import { getImageUrl } from '../../utils/getImageUrl';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleCardSelection } from '../../redux/createSlice';
+import { RootState } from '../../redux/store';
 
 type Props = {
   artistTitle: string;
@@ -12,6 +15,23 @@ type Props = {
 };
 
 export const Card = (props: Props): React.JSX.Element => {
+  const selectedCards = useSelector(
+    (state: RootState) => state.selectedCards.selectedCards
+  );
+  const isChecked = selectedCards.some((card) => card.id === props.id);
+  const dispatch = useDispatch();
+
+  const handleSelection = () => {
+    dispatch(
+      toggleCardSelection({
+        id: props.id,
+        title: props.title,
+        description: `${props.artistTitle}, ${props.placeOfOrigin}, ${props.dateDisplay}`,
+        url: getImageUrl(props.imageId, '400'),
+      })
+    );
+  };
+
   return (
     <li
       onClick={() => props.onClick(props.id)}
@@ -28,6 +48,13 @@ export const Card = (props: Props): React.JSX.Element => {
         <p className={styles.cardDate}>
           {props.placeOfOrigin}, {props.dateDisplay}
         </p>
+        <input
+          className={styles.checkbox}
+          type="checkbox"
+          checked={isChecked}
+          onChange={() => handleSelection()}
+          onClick={(e) => e.stopPropagation()}
+        />
       </div>
     </li>
   );
