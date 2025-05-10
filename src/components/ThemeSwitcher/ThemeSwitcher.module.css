@@ -1,0 +1,74 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 54px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--main-color-text);
+  border-radius: 30px;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  font-size: 16px;
+  color: var(--bg-color);
+}
+
+.sun svg {
+  position: relative;
+  z-index: 2;
+  top: 3px;
+  left: 3px;
+  fill: #f39c12;
+}
+
+.moon svg {
+  position: relative;
+  z-index: 2;
+  top: 3px;
+  right: 3px;
+  fill: var(--addition-color-text);
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 45px;
+  width: 45px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--bg-color);
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: var(--addition-color-text);
+}
+
+input:checked + .slider::before {
+  transform: translateX(49px);
+}
+
+input:checked + .slider .sun {
+  opacity: 0.4;
+}
+input:checked + .slider .moon {
+  opacity: 1;
+}
